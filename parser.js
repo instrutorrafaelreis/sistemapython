@@ -12,23 +12,19 @@ class Parser {
             let line = lines[i];
             if (line.trim() === '') continue;
 
-            // Calcula a indentação em espaços
             let indent = 0;
             const match = line.match(/^(\s+)/);
             if (match) indent = match[1].length;
             
             line = line.trim();
 
-            // Desce na pilha de indentação fechando chaves
             while (indentStack.length > 1 && indent < indentStack[indentStack.length - 1]) {
                 jsCode += '}\n';
                 indentStack.pop();
             }
 
-            // Ignora comentários
             if (line.startsWith('#')) continue;
 
-            // def func():
             let defMatch = line.match(/^def\s+([a-zA-Z_]\w*)\s*\((.*?)\)\s*:/);
             if (defMatch) {
                 jsCode += `function ${defMatch[1]}(${defMatch[2]}) {\n`;
@@ -36,7 +32,6 @@ class Parser {
                 continue;
             }
 
-            // for i in range(x):
             let forMatch = line.match(/^for\s+([a-zA-Z_]\w*)\s+in\s+range\((.*?)\)\s*:/);
             if (forMatch) {
                 const iter = forMatch[1];
@@ -46,7 +41,6 @@ class Parser {
                 continue;
             }
 
-            // for item in list:
             let forInMatch = line.match(/^for\s+([a-zA-Z_]\w*)\s+in\s+(.*?)\s*:/);
             if (forInMatch && !forMatch) {
                 jsCode += `for(let ${forInMatch[1]} of ${forInMatch[2]}) {\n`;
@@ -54,7 +48,6 @@ class Parser {
                 continue;
             }
 
-            // if cond:
             let ifMatch = line.match(/^if\s+(.*?)\s*:/);
             if (ifMatch) {
                 let cond = ifMatch[1].replace(/\band\b/g, '&&').replace(/\bor\b/g, '||').replace(/\bnot\b/g, '!');
@@ -63,7 +56,6 @@ class Parser {
                 continue;
             }
 
-            // elif cond:
             let elifMatch = line.match(/^elif\s+(.*?)\s*:/);
             if (elifMatch) {
                 indentStack.pop();
@@ -73,7 +65,6 @@ class Parser {
                 continue;
             }
 
-            // else:
             let elseMatch = line.match(/^else\s*:/);
             if (elseMatch) {
                 indentStack.pop();
@@ -82,7 +73,6 @@ class Parser {
                 continue;
             }
 
-            // booleanos
             line = line.replace(/\bTrue\b/g, 'true').replace(/\bFalse\b/g, 'false');
 
             jsCode += line + ';\n';
@@ -98,20 +88,36 @@ class Parser {
 
     parse(code) {
         this.commands = [];
-        
         const jsCode = this.transpile(code);
         
-        // Contexto de execução
+        // Contexto de execução com novas funções (input, int, str, float, type)
         const env = {
             frente: (val) => this.commands.push({type: 'frente', value: val}),
             direita: (val) => this.commands.push({type: 'direita', value: val}),
             esquerda: (val) => this.commands.push({type: 'esquerda', value: val}),
             cor: (val) => this.commands.push({type: 'cor', value: val}),
-            print: (val) => this.commands.push({type: 'print', value: val})
+            print: (...args) => this.commands.push({type: 'print', value: args.join(' ')}),
+            input: (msg) => prompt(msg || ''),
+            int: (val) => {
+                const num = parseInt(val);
+                if (isNaN(num)) throw new Error(`Não foi possível converter '${val}' para int.`);
+                return num;
+            },
+            float: (val) => {
+                const num = parseFloat(val);
+                if (isNaN(num)) throw new Error(`Não foi possível converter '${val}' para float.`);
+                return num;
+            },
+            str: (val) => String(val),
+            type: (val) => {
+                if (typeof val === 'number') return Number.isInteger(val) ? "<class 'int'>" : "<class 'float'>";
+                if (typeof val === 'string') return "<class 'str'>";
+                if (typeof val === 'boolean') return "<class 'bool'>";
+                return typeof val;
+            }
         };
 
         try {
-            // Evaluator no contexto
             const func = new Function('env', `
                 with(env) {
                     ${jsCode}
@@ -119,7 +125,7 @@ class Parser {
             `);
             func(env);
         } catch(e) {
-            throw new Error("Erro de Sintaxe Python: " + e.message + ". Verifique sua indentação e sintaxe!");
+            throw new Error("Erro Python: " + e.message);
         }
 
         return this.commands;
