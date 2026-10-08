@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus Academy - Python Mastery</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Painel Lateral: Missões & Status -->
+        <aside class="panel left-panel">
+            <header>
+                <h1>Nexus Academy</h1>
+                <p style="font-size: 0.8rem; color: var(--neon-green); margin-bottom: 10px;">Python Training Facility</p>
+                <div class="status">
+                    <span id="level-display">Lvl: 1</span>
+                    <div class="xp-bar"><div class="xp-fill" id="xp-fill"></div></div>
+                </div>
+            </header>
+            
+            <section class="mission-card">
+                <h2>Missão Atual</h2>
+                <h3 id="mission-title">Carregando...</h3>
+                <p id="mission-objective">...</p>
+                <div class="tips">
+                    <strong>Sintaxe Python (Dicas):</strong>
+                    <ul id="mission-tips"></ul>
+                </div>
+            </section>
+
+            <section class="achievements" style="flex-grow: 1; overflow-y: auto;">
+                <h2>Trilha de Aprendizado</h2>
+                <ul id="achievement-list">
+                    <!-- Gerado dinamicamente pelo app.js -->
+                </ul>
+            </section>
+        </aside>
+
+        <!-- Painel Central: Editor de Código -->
+        <main class="panel center-panel">
+            <div class="editor-header">
+                <h2>Terminal (Python)</h2>
+            </div>
+            <textarea id="code-editor" spellcheck="false" placeholder="Digite seu script Python aqui...&#10;Ex: print('Hello World')"></textarea>
+            <button id="run-btn" class="neon-btn">EXECUTAR SCRIPT</button>
+            <div class="console">
+                <div class="console-header">Console Output</div>
+                <div id="console-output" class="console-body">Sistema pronto. Compilador Python virtual ativo...</div>
+            </div>
+        </main>
+
+        <!-- Painel Direito: Arena Visual -->
+        <aside class="panel right-panel">
+            <div class="boss-container">
+                <span class="boss-name">FIREWALL DO SISTEMA</span>
+                <div class="hp-bar"><div class="hp-fill" id="boss-hp"></div></div>
+            </div>
+            <div class="canvas-container">
+                <canvas id="arena" width="500" height="500"></canvas>
+                <div id="success-overlay">
+                    <h2>ACESSO CONCEDIDO</h2>
+                    <p id="xp-gain-text">+ XP Adquirido</p>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <script src="parser.js"></script>
+    <script src="engine.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
