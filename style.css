@@ -19,11 +19,13 @@ body {
     background-color: var(--bg-color);
     color: var(--text-color);
     font-family: var(--font-mono);
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 20px;
 }
 
 .container {
@@ -31,7 +33,7 @@ body {
     grid-template-columns: 300px 1fr 550px;
     gap: 20px;
     width: 95vw;
-    height: 95vh;
+    min-height: 95vh;
 }
 
 .panel {
