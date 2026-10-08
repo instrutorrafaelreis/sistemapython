@@ -303,3 +303,34 @@ canvas {
     animation: shake-boss 0.5s;
     animation-iteration-count: 1;
 }
+
+/* --- RESPONSIVIDADE --- */
+@media (max-width: 1200px) {
+    body {
+        height: auto;
+        overflow-y: auto;
+        padding: 20px 0;
+    }
+    
+    .container {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto;
+        height: auto;
+        width: 90vw;
+        max-width: 800px;
+    }
+    
+    .panel {
+        min-height: 400px;
+    }
+    
+    .left-panel {
+        max-height: 600px;
+    }
+    
+    canvas {
+        max-width: 100%;
+        height: auto;
+        aspect-ratio: 1 / 1;
+    }
+}
