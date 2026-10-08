@@ -176,6 +176,10 @@ document.getElementById('run-btn').addEventListener('click', () => {
                 const mission = missions[currentMissionIndex];
                 if (mission.validate(points, commands)) {
                     logConsole(`SUCESSO: Missão ${mission.id} concluída!`, "success");
+                    
+                    // Limpa o editor de código quando acertar
+                    document.getElementById('code-editor').value = '';
+                    
                     completeMission();
                 } else {
                     logConsole("FALHA: O código não atendeu ao objetivo da missão.", "error");
