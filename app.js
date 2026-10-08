@@ -131,7 +131,6 @@ const engine = new Engine('arena');
 
 const uiTitle = document.getElementById('mission-title');
 const uiObjective = document.getElementById('mission-objective');
-const uiTips = document.getElementById('mission-tips');
 const uiConsole = document.getElementById('console-output');
 const uiXpFill = document.getElementById('xp-fill');
 const uiLevel = document.getElementById('level-display');
@@ -155,21 +154,12 @@ function updateUI() {
     if (currentMissionIndex >= missions.length) {
         uiTitle.innerText = "Módulo Concluído!";
         uiObjective.innerText = "Você dominou as Variáveis, Tipos de Dados e Inputs no Python!";
-        uiTips.innerHTML = "";
         return;
     }
 
     const mission = missions[currentMissionIndex];
     uiTitle.innerText = `Nível ${mission.id}: ${mission.title}`;
     uiObjective.innerText = mission.objective;
-    
-    uiTips.innerHTML = "";
-    mission.tips.forEach(tip => {
-        const li = document.createElement('li');
-        li.innerText = tip;
-        li.style.whiteSpace = "pre";
-        uiTips.appendChild(li);
-    });
 
     uiXpFill.style.width = `${xp}%`;
     uiLevel.innerText = `Lvl: ${level}`;
