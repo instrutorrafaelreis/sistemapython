@@ -1,4 +1,7 @@
 const missions = [
+    // ==========================================
+    // MÓDULO 1: VARIÁVEIS, TIPOS E INPUTS (1.1 - 1.20)
+    // ==========================================
     {
         id: '1.1', title: "Hello World",
         objective: "Sua primeira invasão! Use o comando print para testar a comunicação.",
@@ -67,7 +70,7 @@ const missions = [
     },
     {
         id: '1.12', title: "O Problema Matemático",
-        objective: "Tente somar duas strings. Faça a = '5', b = '5', e dê print(a + b). Veja o resultado bizarrro!",
+        objective: "Tente somar duas strings. Faça a = '5', b = '5', e dê print(a + b). Veja o resultado bizarro!",
         tips: ["a = '5'", "b = '5'", "print(a + b)"],
         validate: (p, c, code) => c.some(cmd => cmd.type === 'print' && cmd.value === '55')
     },
@@ -118,6 +121,130 @@ const missions = [
         objective: "O Firewall exige: Leia uma senha(input), converta para int, some 10 e ande para a frente com esse valor!",
         tips: ["senha = int(input('Senha (digite 50):'))", "frente(senha + 10)"],
         validate: (p, c, code) => code.includes('int(input') && c.some(cmd => cmd.type === 'frente')
+    },
+
+    // ==========================================
+    // MÓDULO 2: CONDICIONAIS (IF, ELIF, ELSE) (2.1 - 2.20)
+    // ==========================================
+    {
+        id: '2.1', title: "O Primeiro IF",
+        objective: "Teste a tomada de decisão! Crie porta_aberta = True. Se for True, dê print('Passagem liberada').",
+        tips: ["porta_aberta = True", "if porta_aberta:", "    print('Passagem liberada')"],
+        validate: (p, c, code) => code.includes('if') && c.some(cmd => cmd.type === 'print' && String(cmd.value).toLowerCase().includes('passagem'))
+    },
+    {
+        id: '2.2', title: "Comparação de Igualdade (==)",
+        objective: "No Python usamos == para checar igualdade. Crie chave = 'nexus'. Se chave == 'nexus': dê print('Chave aceita').",
+        tips: ["chave = 'nexus'", "if chave == 'nexus':", "    print('Chave aceita')"],
+        validate: (p, c, code) => code.includes('==') && code.includes('if') && c.some(cmd => cmd.type === 'print' && String(cmd.value).toLowerCase().includes('chave'))
+    },
+    {
+        id: '2.3', title: "Comparação de Diferença (!=)",
+        objective: "Use != para verificar se é diferente. Crie status = 'perigo'. Se status != 'seguro': dê print('Alerta de intruso').",
+        tips: ["status = 'perigo'", "if status != 'seguro':", "    print('Alerta de intruso')"],
+        validate: (p, c, code) => code.includes('!=') && code.includes('if') && c.some(cmd => cmd.type === 'print' && String(cmd.value).toLowerCase().includes('alerta'))
+    },
+    {
+        id: '2.4', title: "Maior Que (>)",
+        objective: "Verifique números! Crie energia = 80. Se energia > 50: dê print('Sistemas operando').",
+        tips: ["energia = 80", "if energia > 50:", "    print('Sistemas operando')"],
+        validate: (p, c, code) => code.includes('>') && code.includes('if') && c.some(cmd => cmd.type === 'print' && String(cmd.value).toLowerCase().includes('sistemas'))
+    },
+    {
+        id: '2.5', title: "Menor Que (<)",
+        objective: "Alerta de emergência! Crie vida = 15. Se vida < 20: dê print('Vida critica').",
+        tips: ["vida = 15", "if vida < 20:", "    print('Vida critica')"],
+        validate: (p, c, code) => code.includes('<') && code.includes('if') && c.some(cmd => cmd.type === 'print' && String(cmd.value).toLowerCase().includes('vida'))
+    },
+    {
+        id: '2.6', title: "Maior ou Igual (>=)",
+        objective: "O nível mínimo é 18. Crie nivel = 20. Se nivel >= 18: dê print('Acesso master').",
+        tips: ["nivel = 20", "if nivel >= 18:", "    print('Acesso master')"],
+        validate: (p, c, code) => code.includes('>=') && code.includes('if') && c.some(cmd => cmd.type === 'print' && String(cmd.value).toLowerCase().includes('acesso'))
+    },
+    {
+        id: '2.7', title: "Menor ou Igual (<=)",
+        objective: "Limite de tentativas! Crie tentativas = 2. Se tentativas <= 3: dê print('Permissao mantida').",
+        tips: ["tentativas = 2", "if tentativas <= 3:", "    print('Permissao mantida')"],
+        validate: (p, c, code) => code.includes('<=') && code.includes('if') && c.some(cmd => cmd.type === 'print' && String(cmd.value).toLowerCase().includes('permissao'))
+    },
+    {
+        id: '2.8', title: "A Bifurcação: IF e ELSE",
+        objective: "Crie senha = 999. Se senha == 123 dê print('Liberado'), senão (else:) dê print('Bloqueado').",
+        tips: ["senha = 999", "if senha == 123:", "    print('Liberado')", "else:", "    print('Bloqueado')"],
+        validate: (p, c, code) => code.includes('if') && code.includes('else') && c.some(cmd => cmd.type === 'print' && String(cmd.value).toLowerCase().includes('bloqueado'))
+    },
+    {
+        id: '2.9', title: "IF / ELSE com Input",
+        objective: "Peça resposta = input('Sim ou Nao: '). Se resposta == 'Sim' dê print('Confirmado'), senão dê print('Cancelado').",
+        tips: ["resposta = input('Sim ou Nao: ')", "if resposta == 'Sim':", "    print('Confirmado')", "else:", "    print('Cancelado')"],
+        validate: (p, c, code) => code.includes('input') && code.includes('if') && code.includes('else') && c.some(cmd => cmd.type === 'print')
+    },
+    {
+        id: '2.10', title: "Validação Numérica com IF / ELSE",
+        objective: "Peça idade = int(input('Idade: ')). Se idade >= 18 dê print('Maior de idade'), senão dê print('Menor de idade').",
+        tips: ["idade = int(input('Idade: '))", "if idade >= 18:", "    print('Maior de idade')", "else:", "    print('Menor de idade')"],
+        validate: (p, c, code) => code.includes('int(input') && code.includes('if') && code.includes('else') && c.some(cmd => cmd.type === 'print')
+    },
+    {
+        id: '2.11', title: "Três Caminhos: O ELIF",
+        objective: "Crie pontos = 70. Se pontos > 80 dê print('Excelente'). elif pontos >= 50: dê print('Regular'). else: dê print('Reprovado').",
+        tips: ["pontos = 70", "if pontos > 80:", "    print('Excelente')", "elif pontos >= 50:", "    print('Regular')", "else:", "    print('Reprovado')"],
+        validate: (p, c, code) => code.includes('if') && code.includes('elif') && code.includes('else') && c.some(cmd => cmd.type === 'print')
+    },
+    {
+        id: '2.12', title: "Semáforo do Sistema (ELIF)",
+        objective: "Peça sinal = input('Cor: '). Se for 'verde' dê print('Acelerar'), elif 'amarelo' print('Atencao'), senão print('Parar').",
+        tips: ["sinal = input('Cor: ')", "if sinal == 'verde':", "    print('Acelerar')", "elif sinal == 'amarelo':", "    print('Atencao')", "else:", "    print('Parar')"],
+        validate: (p, c, code) => code.includes('input') && code.includes('elif') && c.some(cmd => cmd.type === 'print')
+    },
+    {
+        id: '2.13', title: "Operador Lógico AND (E)",
+        objective: "Ambas devem ser verdadeiras! Crie usuario = 'admin' e codigo = 777. Se usuario == 'admin' and codigo == 777: dê print('Super Acesso').",
+        tips: ["usuario = 'admin'", "codigo = 777", "if usuario == 'admin' and codigo == 777:", "    print('Super Acesso')"],
+        validate: (p, c, code) => code.includes('and') && code.includes('if') && c.some(cmd => cmd.type === 'print' && String(cmd.value).toLowerCase().includes('super'))
+    },
+    {
+        id: '2.14', title: "Operador Lógico OR (OU)",
+        objective: "Basta uma ser verdadeira! Crie cargo = 'gerente'. Se cargo == 'gerente' or cargo == 'diretor': dê print('Autorizado').",
+        tips: ["cargo = 'gerente'", "if cargo == 'gerente' or cargo == 'diretor':", "    print('Autorizado')"],
+        validate: (p, c, code) => code.includes('or') && code.includes('if') && c.some(cmd => cmd.type === 'print' && String(cmd.value).toLowerCase().includes('autorizado'))
+    },
+    {
+        id: '2.15', title: "Operador NOT (NÃO)",
+        objective: "Invertendo booleanos! Crie bloqueado = False. Se not bloqueado: dê print('Conexao ativa').",
+        tips: ["bloqueado = False", "if not bloqueado:", "    print('Conexao ativa')"],
+        validate: (p, c, code) => code.includes('not') && code.includes('if') && c.some(cmd => cmd.type === 'print' && String(cmd.value).toLowerCase().includes('conexao'))
+    },
+    {
+        id: '2.16', title: "Faixas Numéricas com AND",
+        objective: "Verifique intervalo! Crie nota = 9. Se nota >= 7 and nota <= 10: dê print('Aprovado com merito').",
+        tips: ["nota = 9", "if nota >= 7 and nota <= 10:", "    print('Aprovado com merito')"],
+        validate: (p, c, code) => code.includes('and') && code.includes('if') && c.some(cmd => cmd.type === 'print' && String(cmd.value).toLowerCase().includes('aprovado'))
+    },
+    {
+        id: '2.17', title: "Condicionais Aninhadas (IF dentro de IF)",
+        objective: "Crie login = True e nivel = 2. Se login: e dentro se nivel > 1: dê print('Painel VIP'). Preste atenção na indentação!",
+        tips: ["login = True", "nivel = 2", "if login:", "    if nivel > 1:", "        print('Painel VIP')"],
+        validate: (p, c, code) => (code.match(/if\b/g) || []).length >= 2 && c.some(cmd => cmd.type === 'print' && String(cmd.value).toLowerCase().includes('vip'))
+    },
+    {
+        id: '2.18', title: "Decisão com Ações na Arena",
+        objective: "Se direcao == 'direita', vire direita(90), senão esquerda(90). Depois ande frente(100).",
+        tips: ["direcao = 'direita'", "if direcao == 'direita':", "    direita(90)", "else:", "    esquerda(90)", "frente(100)"],
+        validate: (p, c, code) => code.includes('if') && code.includes('else') && (c.some(cmd => cmd.type === 'direita') || c.some(cmd => cmd.type === 'esquerda')) && c.some(cmd => cmd.type === 'frente')
+    },
+    {
+        id: '2.19', title: "Decisão com Cores e Manobra",
+        objective: "Peça modo = input('Modo: '). Se for 'ataque', defina cor('red') e frente(120), senão cor('blue') e frente(60).",
+        tips: ["modo = input('Modo: ')", "if modo == 'ataque':", "    cor('red')", "    frente(120)", "else:", "    cor('blue')", "    frente(60)"],
+        validate: (p, c, code) => code.includes('input') && code.includes('if') && code.includes('else') && c.some(cmd => cmd.type === 'cor') && c.some(cmd => cmd.type === 'frente')
+    },
+    {
+        id: '2.20', title: "BOSS DO FIREWALL: O GUARDIÃO CONDICIONAL",
+        objective: "Peça codigo = int(input('Codigo: ')). Se for 100: direita(90) e frente(150). elif for 50: esquerda(90) e frente(150). else: print('Codigo Invalido').",
+        tips: ["codigo = int(input('Codigo: '))", "if codigo == 100:", "    direita(90)", "    frente(150)", "elif codigo == 50:", "    esquerda(90)", "    frente(150)", "else:", "    print('Codigo Invalido')"],
+        validate: (p, c, code) => code.includes('int(input') && code.includes('if') && code.includes('elif') && (c.some(cmd => cmd.type === 'frente') || c.some(cmd => cmd.type === 'print'))
     }
 ];
 
@@ -135,6 +262,7 @@ const uiConsole = document.getElementById('console-output');
 const uiXpFill = document.getElementById('xp-fill');
 const uiLevel = document.getElementById('level-display');
 const uiBossHp = document.getElementById('boss-hp');
+const uiBossName = document.querySelector('.boss-name');
 const uiAchievementList = document.getElementById('achievement-list');
 
 function initAchievements() {
@@ -152,8 +280,11 @@ initAchievements();
 
 function updateUI() {
     if (currentMissionIndex >= missions.length) {
-        uiTitle.innerText = "Módulo Concluído!";
-        uiObjective.innerText = "Você dominou as Variáveis, Tipos de Dados e Inputs no Python!";
+        uiTitle.innerText = "🏆 NEXUS ACADEMY HACKEADA COM SUCESSO!";
+        uiObjective.innerText = "Parabéns, Hacker Lendário! Você dominou Variáveis, Tipos de Dados, Inputs e Condicionais no Python!";
+        uiXpFill.style.width = '100%';
+        uiBossHp.style.width = '0%';
+        if (uiBossName) uiBossName.innerText = "SISTEMA TOTALMENTE DOMINADO";
         return;
     }
 
@@ -161,13 +292,29 @@ function updateUI() {
     uiTitle.innerText = `Nível ${mission.id}: ${mission.title}`;
     uiObjective.innerText = mission.objective;
 
-    uiXpFill.style.width = `${xp}%`;
+    // Nível atual (Módulo 1 ou Módulo 2)
+    level = currentMissionIndex < 20 ? 1 : 2;
     uiLevel.innerText = `Lvl: ${level}`;
+
+    // Nome e HP do Boss
+    if (currentMissionIndex < 20) {
+        if (uiBossName) uiBossName.innerText = "FIREWALL DO SISTEMA (MÓDULO 1)";
+        bossHp = Math.max(0, 100 - (currentMissionIndex * 5));
+    } else {
+        if (uiBossName) uiBossName.innerText = "GUARDIÃO CONDICIONAL (MÓDULO 2)";
+        bossHp = Math.max(0, 100 - ((currentMissionIndex - 20) * 5));
+    }
     uiBossHp.style.width = `${bossHp}%`;
+
+    // Barra de XP contínua
+    xp = (currentMissionIndex / missions.length) * 100;
+    uiXpFill.style.width = `${xp}%`;
     
-    for(let i=0; i<missions.length; i++){
+    // Atualiza a lista lateral de conquistas
+    for (let i = 0; i < missions.length; i++) {
         const li = document.getElementById(`achiev-${i}`);
-        if(i < currentMissionIndex) {
+        if (!li) continue;
+        if (i < currentMissionIndex) {
             li.className = 'unlocked';
             li.innerText = `✅ ${missions[i].id} - ${missions[i].title}`;
         } else if (i === currentMissionIndex) {
@@ -200,13 +347,13 @@ document.getElementById('run-btn').addEventListener('click', () => {
     if (engine.isAnimating) return;
 
     const code = document.getElementById('code-editor').value;
-    logConsole("Executando Script...");
+    logConsole("Executando Script Python...");
 
     try {
         const commands = parser.parse(code);
         
         if (commands.length === 0) {
-            logConsole("Nenhum comando válido encontrado.", "error");
+            logConsole("Nenhum comando válido executado.", "error");
             return;
         }
         
@@ -217,14 +364,13 @@ document.getElementById('run-btn').addEventListener('click', () => {
             
             if (currentMissionIndex < missions.length) {
                 const mission = missions[currentMissionIndex];
-                // Passa points, commands e code
                 if (mission.validate(points, commands, code)) {
                     logConsole(`SUCESSO: Nível ${mission.id} concluído!`, "success");
                     
                     document.getElementById('code-editor').value = '';
                     completeMission();
                 } else {
-                    logConsole("FALHA: Seu código não atendeu ao objetivo exato da missão.", "error");
+                    logConsole("FALHA: Seu código não atendeu ao objetivo da missão.", "error");
                 }
             }
         }, onPrint);
@@ -235,12 +381,16 @@ document.getElementById('run-btn').addEventListener('click', () => {
 });
 
 function completeMission() {
-    const stepXp = 100 / missions.length;
-    
     const overlay = document.getElementById('success-overlay');
     const bossContainer = document.querySelector('.boss-container');
     const xpText = document.getElementById('xp-gain-text');
-    if (xpText) xpText.innerText = `+ ${stepXp.toFixed(1)} XP | Conhecimento Absorvido!`;
+    
+    const isBossDefeated = (currentMissionIndex === 19 || currentMissionIndex === 39);
+    if (xpText) {
+        xpText.innerText = isBossDefeated 
+            ? `💥 BOSS DESTRUÍDO! +XP MÁXIMO!`
+            : `+ 2.5% XP | Dano no Sistema!`;
+    }
     
     if (overlay) overlay.classList.add('active');
     if (bossContainer) bossContainer.classList.add('shake');
@@ -251,18 +401,9 @@ function completeMission() {
 
     setTimeout(() => {
         if (overlay) overlay.classList.remove('active');
-        
-        xp += stepXp;
-        if (xp > 99) xp = 100;
-        
-        bossHp -= stepXp;
-        if (bossHp < 0) bossHp = 0;
-        
         currentMissionIndex++;
-        level = Math.floor(currentMissionIndex / 3) + 1;
-        
         updateUI();
-    }, 2500);
+    }, 2200);
 }
 
 // Init

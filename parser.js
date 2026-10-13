@@ -6,83 +6,101 @@ class Parser {
     transpile(code) {
         const lines = code.split('\n');
         let jsCode = '';
-        let indentStack = [0];
+        let stack = [];
 
         for (let i = 0; i < lines.length; i++) {
-            let line = lines[i];
-            if (line.trim() === '') continue;
+            let rawLine = lines[i];
+            if (rawLine.trim() === '') continue;
 
             let indent = 0;
-            const match = line.match(/^(\s+)/);
+            const match = rawLine.match(/^(\s+)/);
             if (match) indent = match[1].length;
-            
-            line = line.trim();
-
-            while (indentStack.length > 1 && indent < indentStack[indentStack.length - 1]) {
-                jsCode += '}\n';
-                indentStack.pop();
-            }
-
+            let line = rawLine.trim();
             if (line.startsWith('#')) continue;
 
-            let defMatch = line.match(/^def\s+([a-zA-Z_]\w*)\s*\((.*?)\)\s*:/);
-            if (defMatch) {
-                jsCode += `function ${defMatch[1]}(${defMatch[2]}) {\n`;
-                indentStack.push(indent + 4); 
+            // Check if this line is elif or else at current level
+            let isElif = /^elif\s+(.*?)\s*:/.test(line);
+            let isElse = /^else\s*:/.test(line);
+
+            // Pop blocks that are deeper than current indent
+            while (stack.length > 0 && stack[stack.length - 1].indent > indent) {
+                jsCode += '}\n';
+                stack.pop();
+            }
+
+            if (isElif) {
+                let m = line.match(/^elif\s+(.*?)\s*:/);
+                let cond = m[1].replace(/\band\b/g, '&&').replace(/\bor\b/g, '||').replace(/\bnot\b/g, '!');
+                if (stack.length > 0 && stack[stack.length - 1].indent === indent) {
+                    jsCode += '} else if (' + cond + ') {\n';
+                    stack[stack.length - 1].type = 'elif';
+                } else {
+                    jsCode += 'if (' + cond + ') {\n';
+                    stack.push({ indent: indent, type: 'if' });
+                }
                 continue;
             }
 
+            if (isElse) {
+                if (stack.length > 0 && stack[stack.length - 1].indent === indent) {
+                    jsCode += '} else {\n';
+                    stack[stack.length - 1].type = 'else';
+                } else {
+                    jsCode += '{\n';
+                    stack.push({ indent: indent, type: 'else' });
+                }
+                continue;
+            }
+
+            // For any other line, if stack top has same indent or greater, close it!
+            while (stack.length > 0 && stack[stack.length - 1].indent >= indent) {
+                jsCode += '}\n';
+                stack.pop();
+            }
+
+            // def
+            let defMatch = line.match(/^def\s+([a-zA-Z_]\w*)\s*\((.*?)\)\s*:/);
+            if (defMatch) {
+                jsCode += 'function ' + defMatch[1] + '(' + defMatch[2] + ') {\n';
+                stack.push({ indent: indent, type: 'def' });
+                continue;
+            }
+
+            // for range
             let forMatch = line.match(/^for\s+([a-zA-Z_]\w*)\s+in\s+range\((.*?)\)\s*:/);
             if (forMatch) {
                 const iter = forMatch[1];
                 const rangeArgs = forMatch[2];
-                jsCode += `for(let ${iter} = 0; ${iter} < ${rangeArgs}; ${iter}++) {\n`;
-                indentStack.push(indent + 4);
+                jsCode += 'for (let ' + iter + ' = 0; ' + iter + ' < ' + rangeArgs + '; ' + iter + '++) {\n';
+                stack.push({ indent: indent, type: 'for' });
                 continue;
             }
 
+            // for in
             let forInMatch = line.match(/^for\s+([a-zA-Z_]\w*)\s+in\s+(.*?)\s*:/);
             if (forInMatch && !forMatch) {
-                jsCode += `for(let ${forInMatch[1]} of ${forInMatch[2]}) {\n`;
-                indentStack.push(indent + 4);
+                jsCode += 'for (let ' + forInMatch[1] + ' of ' + forInMatch[2] + ') {\n';
+                stack.push({ indent: indent, type: 'for' });
                 continue;
             }
 
+            // if
             let ifMatch = line.match(/^if\s+(.*?)\s*:/);
             if (ifMatch) {
                 let cond = ifMatch[1].replace(/\band\b/g, '&&').replace(/\bor\b/g, '||').replace(/\bnot\b/g, '!');
-                jsCode += `if(${cond}) {\n`;
-                indentStack.push(indent + 4);
-                continue;
-            }
-
-            let elifMatch = line.match(/^elif\s+(.*?)\s*:/);
-            if (elifMatch) {
-                indentStack.pop();
-                let cond = elifMatch[1].replace(/\band\b/g, '&&').replace(/\bor\b/g, '||').replace(/\bnot\b/g, '!');
-                jsCode += `} else if(${cond}) {\n`;
-                indentStack.push(indent + 4);
-                continue;
-            }
-
-            let elseMatch = line.match(/^else\s*:/);
-            if (elseMatch) {
-                indentStack.pop();
-                jsCode += `} else {\n`;
-                indentStack.push(indent + 4);
+                jsCode += 'if (' + cond + ') {\n';
+                stack.push({ indent: indent, type: 'if' });
                 continue;
             }
 
             line = line.replace(/\bTrue\b/g, 'true').replace(/\bFalse\b/g, 'false');
-
             jsCode += line + ';\n';
         }
 
-        while (indentStack.length > 1) {
+        while (stack.length > 0) {
             jsCode += '}\n';
-            indentStack.pop();
+            stack.pop();
         }
-
         return jsCode;
     }
 
@@ -90,7 +108,7 @@ class Parser {
         this.commands = [];
         const jsCode = this.transpile(code);
         
-        // Contexto de execução com novas funções (input, int, str, float, type)
+        // Contexto de execução com funções do ambiente
         const env = {
             frente: (val) => this.commands.push({type: 'frente', value: val}),
             direita: (val) => this.commands.push({type: 'direita', value: val}),
