@@ -18,7 +18,7 @@ class Engine {
         this.x = this.width / 2;
         this.y = this.height / 2;
         this.angle = -90; 
-        this.color = '#3fb950'; 
+        this.color = '#10B981'; // Nen do Gon (Verde Esmeralda radiante)
         
         this.ctx.clearRect(0, 0, this.width, this.height);
         this.pathPoints = [{x: this.x, y: this.y}];
@@ -31,14 +31,15 @@ class Engine {
         this.ctx.rotate((this.angle * Math.PI) / 180);
         
         this.ctx.beginPath();
-        this.ctx.moveTo(10, 0);
-        this.ctx.lineTo(-5, 5);
-        this.ctx.lineTo(-5, -5);
+        this.ctx.moveTo(12, 0);
+        this.ctx.lineTo(-6, 6);
+        this.ctx.lineTo(-3, 0);
+        this.ctx.lineTo(-6, -6);
         this.ctx.closePath();
         
-        this.ctx.fillStyle = '#58a6ff';
-        this.ctx.shadowColor = '#58a6ff';
-        this.ctx.shadowBlur = 10;
+        this.ctx.fillStyle = '#10B981';
+        this.ctx.shadowColor = '#10B981';
+        this.ctx.shadowBlur = 14;
         this.ctx.fill();
         
         this.ctx.restore();
