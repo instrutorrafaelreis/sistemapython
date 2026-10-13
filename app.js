@@ -1,252 +1,293 @@
 // ========================================================
-// HUNTER x BUG - MOTOR PEDAGÓGICO & GERENCIADOR DE ESTADO
+// HUNTER × BUG - MOTOR PEDAGÓGICO & GERENCIADOR TÁTICO
+// Inspirado no Exame Hunter e Torre Celestial
 // ========================================================
 
 const missions = [
     // ==========================================
-    // MÓDULO 1: VARIÁVEIS, TIPOS E INPUTS (1.1 - 1.20)
+    // FASE 1: NEN & MANIPULAÇÃO DE DADOS (1.1 - 1.20)
     // ==========================================
     {
-        id: '1.1', module: 1, title: "Hello World",
-        objective: "Sua primeira invasão! Use o comando print para testar a comunicação.",
+        id: '1.1', module: 1, rank: 'RANK D', rewardJeny: 500,
+        title: "Hello World (Manifestação de Ten)",
+        objective: "Sua primeira manifestação de Nen! Use print() para emitir seu sinal no terminal Hunter.",
         tips: ["print('Hello World')"],
         validate: (p, c, code) => c.some(cmd => cmd.type === 'print')
     },
     {
-        id: '1.2', module: 1, title: "Dados Textuais (Strings)",
+        id: '1.2', module: 1, rank: 'RANK D', rewardJeny: 500,
+        title: "Dados Textuais (Armazenamento de Aura)",
         objective: "Crie uma variável chamada 'nome' e guarde um texto (string) nela. Depois dê print(nome).",
         tips: ["nome = 'Hacker'", "print(nome)"],
         validate: (p, c, code) => code.includes('nome') && c.some(cmd => cmd.type === 'print')
     },
     {
-        id: '1.3', module: 1, title: "Dados Numéricos (Int)",
+        id: '1.3', module: 1, rank: 'RANK D', rewardJeny: 500,
+        title: "Dados Numéricos (Nível de Força Int)",
         objective: "Crie uma variável 'idade' e atribua um número inteiro (sem aspas). Dê print nela.",
         tips: ["idade = 25", "print(idade)"],
         validate: (p, c, code) => code.includes('idade') && c.some(cmd => cmd.type === 'print' && !isNaN(parseInt(cmd.value)))
     },
     {
-        id: '1.4', module: 1, title: "Ponto Flutuante (Float)",
+        id: '1.4', module: 1, rank: 'RANK D', rewardJeny: 500,
+        title: "Ponto Flutuante (Fração de Energia Float)",
         objective: "Crie uma variável 'versao' com um número decimal (ex: 1.5). Dê print nela.",
         tips: ["versao = 1.5", "print(versao)"],
         validate: (p, c, code) => code.includes('versao') && c.some(cmd => cmd.type === 'print' && String(cmd.value).includes('.'))
     },
     {
-        id: '1.5', module: 1, title: "Verdadeiro ou Falso (Bool)",
+        id: '1.5', module: 1, rank: 'RANK D', rewardJeny: 500,
+        title: "Verdadeiro ou Falso (Sensor de Presença Bool)",
         objective: "Crie uma variável 'acesso' e defina como True (maiúsculo no Python!). Dê print.",
         tips: ["acesso = True", "print(acesso)"],
         validate: (p, c, code) => code.includes('acesso') && code.includes('True') && c.some(cmd => cmd.type === 'print' && cmd.value === 'true')
     },
     {
-        id: '1.6', module: 1, title: "Inspecionando Tipos",
-        objective: "No Python usamos type() para ver o tipo de um dado. Dê print no tipo de um número inteiro.",
+        id: '1.6', module: 1, rank: 'RANK C', rewardJeny: 800,
+        title: "Inspecionando Tipos (Técnica Gyo)",
+        objective: "Use Gyo para analisar o tipo! Com type(), inspecione e dê print no tipo de um número inteiro.",
         tips: ["print(type(10))"],
         validate: (p, c, code) => code.includes('type') && c.some(cmd => cmd.type === 'print' && String(cmd.value).includes('int'))
     },
     {
-        id: '1.7', module: 1, title: "Múltiplas Variáveis",
-        objective: "Crie duas variáveis 'a' e 'b'. Dê print nas duas.",
+        id: '1.7', module: 1, rank: 'RANK C', rewardJeny: 800,
+        title: "Múltiplas Variáveis (Fluxo Duplo de Nen)",
+        objective: "Crie duas variáveis 'a' e 'b'. Dê print nas duas em linhas separadas.",
         tips: ["a = 10", "b = 20", "print(a)", "print(b)"],
         validate: (p, c, code) => c.filter(cmd => cmd.type === 'print').length >= 2
     },
     {
-        id: '1.8', module: 1, title: "Operações: Soma",
+        id: '1.8', module: 1, rank: 'RANK C', rewardJeny: 800,
+        title: "Operações: Soma (Poder Combinado)",
         objective: "Crie uma variável 'soma' que guarde o resultado de 5 + 5. Dê print no resultado.",
         tips: ["soma = 5 + 5", "print(soma)"],
         validate: (p, c, code) => code.includes('+') && c.some(cmd => cmd.type === 'print' && cmd.value == 10)
     },
     {
-        id: '1.9', module: 1, title: "Concatenação",
+        id: '1.9', module: 1, rank: 'RANK C', rewardJeny: 800,
+        title: "Concatenação (Elo de Correntes)",
         objective: "Junte textos! Crie nome = 'Maria', e dê print('Ola ' + nome).",
         tips: ["nome = 'Maria'", "print('Ola ' + nome)"],
         validate: (p, c, code) => code.includes('+') && c.some(cmd => cmd.type === 'print' && String(cmd.value).includes('Ola'))
     },
     {
-        id: '1.10', module: 1, title: "Capturando Input",
+        id: '1.10', module: 1, rank: 'RANK C', rewardJeny: 800,
+        title: "Capturando Input (Interrogatório Hunter)",
         objective: "Use a função input() para pedir o nome do usuário e dê print no resultado.",
         tips: ["nome = input('Qual seu nome?')", "print(nome)"],
         validate: (p, c, code) => code.includes('input') && c.some(cmd => cmd.type === 'print')
     },
     {
-        id: '1.11', module: 1, title: "Cuidado com o Input",
+        id: '1.11', module: 1, rank: 'RANK B', rewardJeny: 1200,
+        title: "Cuidado com o Input (Armadilha de Texto)",
         objective: "Tudo que vem do input() é String! Peça um input de idade e dê print(type(idade)).",
         tips: ["idade = input('Sua idade:')", "print(type(idade))"],
         validate: (p, c, code) => code.includes('input') && code.includes('type') && c.some(cmd => cmd.type === 'print' && String(cmd.value).includes('str'))
     },
     {
-        id: '1.12', module: 1, title: "O Problema Matemático",
-        objective: "Tente somar duas strings. Faça a = '5', b = '5', e dê print(a + b). Veja o resultado bizarro!",
+        id: '1.12', module: 1, rank: 'RANK B', rewardJeny: 1200,
+        title: "O Problema Matemático (Bug da Falsa Soma)",
+        objective: "Tente somar duas strings. Faça a = '5', b = '5', e dê print(a + b). Veja o resultado colado!",
         tips: ["a = '5'", "b = '5'", "print(a + b)"],
         validate: (p, c, code) => c.some(cmd => cmd.type === 'print' && cmd.value === '55')
     },
     {
-        id: '1.13', module: 1, title: "Conversão: int()",
-        objective: "Para somar números vindos de textos, converta com int(). Dê print(int('5') + int('5')).",
+        id: '1.13', module: 1, rank: 'RANK B', rewardJeny: 1200,
+        title: "Conversão: int() (Purificação de Tipo)",
+        objective: "Converta texto para número real com int(). Dê print(int('5') + int('5')).",
         tips: ["print(int('5') + int('5'))"],
         validate: (p, c, code) => code.includes('int') && c.some(cmd => cmd.type === 'print' && cmd.value == 10)
     },
     {
-        id: '1.14', module: 1, title: "Input com Conversão",
-        objective: "Peça um número usando input(), converta para int() e guarde na variável 'x'. Dê print(x + 10).",
+        id: '1.14', module: 1, rank: 'RANK B', rewardJeny: 1200,
+        title: "Input com Conversão (Captura Convertida)",
+        objective: "Peça um número com input(), converta para int() e guarde em 'x'. Dê print(x + 10).",
         tips: ["texto = input('Número:')", "x = int(texto)", "print(x + 10)"],
         validate: (p, c, code) => code.includes('int') && code.includes('input') && c.some(cmd => cmd.type === 'print')
     },
     {
-        id: '1.15', module: 1, title: "Input e int() de uma vez",
-        objective: "Você pode juntar os dois: x = int(input('Número:')). Dê print no tipo(x) para provar que é int.",
+        id: '1.15', module: 1, rank: 'RANK B', rewardJeny: 1200,
+        title: "Input e int() de uma vez (Técnica Rápida)",
+        objective: "Junte os dois: x = int(input('Número:')). Dê print no type(x) para comprovar.",
         tips: ["x = int(input('Número:'))", "print(type(x))"],
         validate: (p, c, code) => code.includes('int(input') && c.some(cmd => cmd.type === 'print' && String(cmd.value).includes('int'))
     },
     {
-        id: '1.16', module: 1, title: "Calculadora de Soma",
+        id: '1.16', module: 1, rank: 'RANK A', rewardJeny: 2000,
+        title: "Calculadora de Soma (Bounty A)",
         objective: "Peça dois inputs e converta ambos para int. Some e dê print no resultado.",
         tips: ["a = int(input('N1:'))", "b = int(input('N2:'))", "print(a + b)"],
         validate: (p, c, code) => code.includes('int(input') && code.includes('+') && c.some(cmd => cmd.type === 'print')
     },
     {
-        id: '1.17', module: 1, title: "Conversão: float()",
-        objective: "E se o usuário digitar 2.5? Use float()! Peça um peso com float(input()) e dê print(peso).",
+        id: '1.17', module: 1, rank: 'RANK A', rewardJeny: 2000,
+        title: "Conversão: float() (Precisão Decimal)",
+        objective: "Para números com vírgula/ponto, use float()! Peça peso = float(input()) e dê print(peso).",
         tips: ["peso = float(input('Peso:'))", "print(peso)"],
         validate: (p, c, code) => code.includes('float') && code.includes('input') && c.some(cmd => cmd.type === 'print')
     },
     {
-        id: '1.18', module: 1, title: "Conversão: str()",
-        objective: "Você não pode concatenar string com número! Faça: print('Meu nível é ' + str(99)).",
+        id: '1.18', module: 1, rank: 'RANK A', rewardJeny: 2000,
+        title: "Conversão: str() (Mesclagem com Texto)",
+        objective: "Converta números para texto com str(). Faça: print('Meu nível é ' + str(99)).",
         tips: ["print('Meu nível é ' + str(99))"],
         validate: (p, c, code) => code.includes('str') && c.some(cmd => cmd.type === 'print' && String(cmd.value).includes('99'))
     },
     {
-        id: '1.19', module: 1, title: "Desafio Variáveis",
+        id: '1.19', module: 1, rank: 'RANK A', rewardJeny: 2000,
+        title: "Desafio de Variáveis (Múltiplos Tipos)",
         objective: "Crie nome (string), idade (int convertido), altura (float convertido). Dê print neles.",
         tips: ["n = input()", "i = int(input())", "a = float(input())", "print(n, i, a)"],
         validate: (p, c, code) => code.includes('int') && code.includes('float') && code.includes('input')
     },
     {
-        id: '1.20', module: 1, title: "BOSS FINAL DAS VARIÁVEIS",
-        objective: "O Firewall exige: Leia uma senha(input), converta para int, some 10 e ande para a frente com esse valor!",
+        id: '1.20', module: 1, rank: 'RANK S - BOSS', rewardJeny: 5000,
+        title: "BOSS DA FASE 1: CHIMERA BUG INICIAL",
+        objective: "O Bug Quimera exige: Leia senha = int(input()), some 10 e acerte o golpe com frente(senha + 10)!",
         tips: ["senha = int(input('Senha (digite 50):'))", "frente(senha + 10)"],
         validate: (p, c, code) => code.includes('int(input') && c.some(cmd => cmd.type === 'frente')
     },
 
     // ==========================================
-    // MÓDULO 2: CONDICIONAIS (IF, ELIF, ELSE) (2.1 - 2.20)
+    // FASE 2: TESTE DE REFLEXOS E CONDICIONAIS (2.1 - 2.20)
     // ==========================================
     {
-        id: '2.1', module: 2, title: "O Primeiro IF",
+        id: '2.1', module: 2, rank: 'RANK D', rewardJeny: 500,
+        title: "O Primeiro IF (Sentido Aranha Hunter)",
         objective: "Teste a tomada de decisão! Crie porta_aberta = True. Se for True, dê print('Passagem liberada').",
         tips: ["porta_aberta = True", "if porta_aberta:", "    print('Passagem liberada')"],
         validate: (p, c, code) => code.includes('if') && c.some(cmd => cmd.type === 'print' && String(cmd.value).toLowerCase().includes('passagem'))
     },
     {
-        id: '2.2', module: 2, title: "Comparação de Igualdade (==)",
+        id: '2.2', module: 2, rank: 'RANK D', rewardJeny: 500,
+        title: "Comparação de Igualdade (==)",
         objective: "No Python usamos == para checar igualdade. Crie chave = 'hunter'. Se chave == 'hunter': dê print('Chave aceita').",
         tips: ["chave = 'hunter'", "if chave == 'hunter':", "    print('Chave aceita')"],
         validate: (p, c, code) => code.includes('==') && code.includes('if') && c.some(cmd => cmd.type === 'print' && String(cmd.value).toLowerCase().includes('chave'))
     },
     {
-        id: '2.3', module: 2, title: "Comparação de Diferença (!=)",
+        id: '2.3', module: 2, rank: 'RANK D', rewardJeny: 500,
+        title: "Comparação de Diferença (!=)",
         objective: "Use != para verificar se é diferente. Crie status = 'perigo'. Se status != 'seguro': dê print('Alerta de intruso').",
         tips: ["status = 'perigo'", "if status != 'seguro':", "    print('Alerta de intruso')"],
         validate: (p, c, code) => code.includes('!=') && code.includes('if') && c.some(cmd => cmd.type === 'print' && String(cmd.value).toLowerCase().includes('alerta'))
     },
     {
-        id: '2.4', module: 2, title: "Maior Que (>)",
-        objective: "Verifique números! Crie energia = 80. Se energia > 50: dê print('Sistemas operando').",
+        id: '2.4', module: 2, rank: 'RANK D', rewardJeny: 500,
+        title: "Maior Que (>) (Medidor de Aura)",
+        objective: "Verifique energia! Crie energia = 80. Se energia > 50: dê print('Sistemas operando').",
         tips: ["energia = 80", "if energia > 50:", "    print('Sistemas operando')"],
         validate: (p, c, code) => code.includes('>') && code.includes('if') && c.some(cmd => cmd.type === 'print' && String(cmd.value).toLowerCase().includes('sistemas'))
     },
     {
-        id: '2.5', module: 2, title: "Menor Que (<)",
+        id: '2.5', module: 2, rank: 'RANK D', rewardJeny: 500,
+        title: "Menor Que (<) (Alerta de Dano)",
         objective: "Alerta de emergência! Crie vida = 15. Se vida < 20: dê print('Vida critica').",
         tips: ["vida = 15", "if vida < 20:", "    print('Vida critica')"],
         validate: (p, c, code) => code.includes('<') && code.includes('if') && c.some(cmd => cmd.type === 'print' && String(cmd.value).toLowerCase().includes('vida'))
     },
     {
-        id: '2.6', module: 2, title: "Maior ou Igual (>=)",
+        id: '2.6', module: 2, rank: 'RANK C', rewardJeny: 800,
+        title: "Maior ou Igual (>=) (Andar Mínimo)",
         objective: "O nível mínimo é 18. Crie nivel = 20. Se nivel >= 18: dê print('Acesso master').",
         tips: ["nivel = 20", "if nivel >= 18:", "    print('Acesso master')"],
         validate: (p, c, code) => code.includes('>=') && code.includes('if') && c.some(cmd => cmd.type === 'print' && String(cmd.value).toLowerCase().includes('acesso'))
     },
     {
-        id: '2.7', module: 2, title: "Menor ou Igual (<=)",
+        id: '2.7', module: 2, rank: 'RANK C', rewardJeny: 800,
+        title: "Menor ou Igual (<=) (Limite de Tentativas)",
         objective: "Limite de tentativas! Crie tentativas = 2. Se tentativas <= 3: dê print('Permissao mantida').",
         tips: ["tentativas = 2", "if tentativas <= 3:", "    print('Permissao mantida')"],
         validate: (p, c, code) => code.includes('<=') && code.includes('if') && c.some(cmd => cmd.type === 'print' && String(cmd.value).toLowerCase().includes('permissao'))
     },
     {
-        id: '2.8', module: 2, title: "A Bifurcação: IF e ELSE",
+        id: '2.8', module: 2, rank: 'RANK C', rewardJeny: 800,
+        title: "A Bifurcação: IF e ELSE (Dois Destinos)",
         objective: "Crie senha = 999. Se senha == 123 dê print('Liberado'), senão (else:) dê print('Bloqueado').",
         tips: ["senha = 999", "if senha == 123:", "    print('Liberado')", "else:", "    print('Bloqueado')"],
         validate: (p, c, code) => code.includes('if') && code.includes('else') && c.some(cmd => cmd.type === 'print' && String(cmd.value).toLowerCase().includes('bloqueado'))
     },
     {
-        id: '2.9', module: 2, title: "IF / ELSE com Input",
+        id: '2.9', module: 2, rank: 'RANK C', rewardJeny: 800,
+        title: "IF / ELSE com Input (Decisão do Jogador)",
         objective: "Peça resposta = input('Sim ou Nao: '). Se resposta == 'Sim' dê print('Confirmado'), senão dê print('Cancelado').",
         tips: ["resposta = input('Sim ou Nao: ')", "if resposta == 'Sim':", "    print('Confirmado')", "else:", "    print('Cancelado')"],
         validate: (p, c, code) => code.includes('input') && code.includes('if') && code.includes('else') && c.some(cmd => cmd.type === 'print')
     },
     {
-        id: '2.10', module: 2, title: "Validação Numérica com IF / ELSE",
+        id: '2.10', module: 2, rank: 'RANK C', rewardJeny: 800,
+        title: "Validação Numérica com IF / ELSE",
         objective: "Peça idade = int(input('Idade: ')). Se idade >= 18 dê print('Maior de idade'), senão dê print('Menor de idade').",
         tips: ["idade = int(input('Idade: '))", "if idade >= 18:", "    print('Maior de idade')", "else:", "    print('Menor de idade')"],
         validate: (p, c, code) => code.includes('int(input') && code.includes('if') && code.includes('else') && c.some(cmd => cmd.type === 'print')
     },
     {
-        id: '2.11', module: 2, title: "Três Caminhos: O ELIF",
+        id: '2.11', module: 2, rank: 'RANK B', rewardJeny: 1200,
+        title: "Três Caminhos: O ELIF (Múltiplas Rotas)",
         objective: "Crie pontos = 70. Se pontos > 80 dê print('Excelente'). elif pontos >= 50: dê print('Regular'). else: dê print('Reprovado').",
         tips: ["pontos = 70", "if pontos > 80:", "    print('Excelente')", "elif pontos >= 50:", "    print('Regular')", "else:", "    print('Reprovado')"],
         validate: (p, c, code) => code.includes('if') && code.includes('elif') && code.includes('else') && c.some(cmd => cmd.type === 'print')
     },
     {
-        id: '2.12', module: 2, title: "Semáforo do Sistema (ELIF)",
+        id: '2.12', module: 2, rank: 'RANK B', rewardJeny: 1200,
+        title: "Semáforo do Sistema (ELIF em Cadeia)",
         objective: "Peça sinal = input('Cor: '). Se for 'verde' dê print('Acelerar'), elif 'amarelo' print('Atencao'), senão print('Parar').",
         tips: ["sinal = input('Cor: ')", "if sinal == 'verde':", "    print('Acelerar')", "elif sinal == 'amarelo':", "    print('Atencao')", "else:", "    print('Parar')"],
         validate: (p, c, code) => code.includes('input') && code.includes('elif') && c.some(cmd => cmd.type === 'print')
     },
     {
-        id: '2.13', module: 2, title: "Operador Lógico AND (E)",
+        id: '2.13', module: 2, rank: 'RANK B', rewardJeny: 1200,
+        title: "Operador Lógico AND (Condição Dupla)",
         objective: "Ambas devem ser verdadeiras! Crie usuario = 'admin' e codigo = 777. Se usuario == 'admin' and codigo == 777: dê print('Super Acesso').",
         tips: ["usuario = 'admin'", "codigo = 777", "if usuario == 'admin' and codigo == 777:", "    print('Super Acesso')"],
         validate: (p, c, code) => code.includes('and') && code.includes('if') && c.some(cmd => cmd.type === 'print' && String(cmd.value).toLowerCase().includes('super'))
     },
     {
-        id: '2.14', module: 2, title: "Operador Lógico OR (OU)",
+        id: '2.14', module: 2, rank: 'RANK B', rewardJeny: 1200,
+        title: "Operador Lógico OR (Rotas Alternativas)",
         objective: "Basta uma ser verdadeira! Crie cargo = 'gerente'. Se cargo == 'gerente' or cargo == 'diretor': dê print('Autorizado').",
         tips: ["cargo = 'gerente'", "if cargo == 'gerente' or cargo == 'diretor':", "    print('Autorizado')"],
         validate: (p, c, code) => code.includes('or') && code.includes('if') && c.some(cmd => cmd.type === 'print' && String(cmd.value).toLowerCase().includes('autorizado'))
     },
     {
-        id: '2.15', module: 2, title: "Operador NOT (NÃO)",
+        id: '2.15', module: 2, rank: 'RANK B', rewardJeny: 1200,
+        title: "Operador NOT (Inversor de Aura)",
         objective: "Invertendo booleanos! Crie bloqueado = False. Se not bloqueado: dê print('Conexao ativa').",
         tips: ["bloqueado = False", "if not bloqueado:", "    print('Conexao ativa')"],
         validate: (p, c, code) => code.includes('not') && code.includes('if') && c.some(cmd => cmd.type === 'print' && String(cmd.value).toLowerCase().includes('conexao'))
     },
     {
-        id: '2.16', module: 2, title: "Faixas Numéricas com AND",
+        id: '2.16', module: 2, rank: 'RANK A', rewardJeny: 2000,
+        title: "Faixas Numéricas com AND (Zona Crítica)",
         objective: "Verifique intervalo! Crie nota = 9. Se nota >= 7 and nota <= 10: dê print('Aprovado com merito').",
         tips: ["nota = 9", "if nota >= 7 and nota <= 10:", "    print('Aprovado com merito')"],
         validate: (p, c, code) => code.includes('and') && code.includes('if') && c.some(cmd => cmd.type === 'print' && String(cmd.value).toLowerCase().includes('aprovado'))
     },
     {
-        id: '2.17', module: 2, title: "Condicionais Aninhadas (IF dentro de IF)",
+        id: '2.17', module: 2, rank: 'RANK A', rewardJeny: 2000,
+        title: "Condicionais Aninhadas (IF dentro de IF)",
         objective: "Crie login = True e nivel = 2. Se login: e dentro se nivel > 1: dê print('Painel VIP').",
         tips: ["login = True", "nivel = 2", "if login:", "    if nivel > 1:", "        print('Painel VIP')"],
         validate: (p, c, code) => (code.match(/if\b/g) || []).length >= 2 && c.some(cmd => cmd.type === 'print' && String(cmd.value).toLowerCase().includes('vip'))
     },
     {
-        id: '2.18', module: 2, title: "Decisão com Ações na Arena",
+        id: '2.18', module: 2, rank: 'RANK A', rewardJeny: 2000,
+        title: "Decisão com Ações na Arena (Evasão Tática)",
         objective: "Se direcao == 'direita', vire direita(90), senão esquerda(90). Depois ande frente(100).",
         tips: ["direcao = 'direita'", "if direcao == 'direita':", "    direita(90)", "else:", "    esquerda(90)", "frente(100)"],
         validate: (p, c, code) => code.includes('if') && code.includes('else') && (c.some(cmd => cmd.type === 'direita') || c.some(cmd => cmd.type === 'esquerda')) && c.some(cmd => cmd.type === 'frente')
     },
     {
-        id: '2.19', module: 2, title: "Decisão com Cores e Manobra",
+        id: '2.19', module: 2, rank: 'RANK A', rewardJeny: 2000,
+        title: "Decisão com Cores e Manobra (Golpe de Nen)",
         objective: "Peça modo = input('Modo: '). Se for 'ataque', defina cor('red') e frente(120), senão cor('blue') e frente(60).",
         tips: ["modo = input('Modo: ')", "if modo == 'ataque':", "    cor('red')", "    frente(120)", "else:", "    cor('blue')", "    frente(60)"],
         validate: (p, c, code) => code.includes('input') && code.includes('if') && code.includes('else') && c.some(cmd => cmd.type === 'cor') && c.some(cmd => cmd.type === 'frente')
     },
     {
-        id: '2.20', module: 2, title: "BOSS DO FIREWALL: O GUARDIÃO CONDICIONAL",
-        objective: "Peça codigo = int(input('Codigo: ')). Se for 100: direita(90) e frente(150). elif for 50: esquerda(90) e frente(150). else: print('Codigo Invalido').",
+        id: '2.20', module: 2, rank: 'RANK S - BOSS', rewardJeny: 5000,
+        title: "BOSS SUPREMO: REI QUIMERA DO FIREWALL",
+        objective: "Peça codigo = int(input('Codigo: ')). Se 100: direita(90) e frente(150). elif 50: esquerda(90) e frente(150). else: print('Codigo Invalido').",
         tips: ["codigo = int(input('Codigo: '))", "if codigo == 100:", "    direita(90)", "    frente(150)", "elif codigo == 50:", "    esquerda(90)", "    frente(150)", "else:", "    print('Codigo Invalido')"],
         validate: (p, c, code) => code.includes('int(input') && code.includes('if') && code.includes('elif') && (c.some(cmd => cmd.type === 'frente') || c.some(cmd => cmd.type === 'print'))
     }
@@ -255,7 +296,14 @@ const missions = [
 // ========================================================
 // GERENCIADOR DE DADOS EM JSON (LOCALSTORAGE)
 // ========================================================
-const STORAGE_KEY = 'nexus_python_academy_data_v2';
+const STORAGE_KEY = 'hunter_x_bug_storage_v3';
+
+function generateHunterSerial(name) {
+    let hash = 0;
+    for (let i = 0; i < name.length; i++) hash = (hash * 31 + name.charCodeAt(i)) % 9000;
+    const num = Math.abs(hash) + 1000;
+    return `#HB-${num}-PY`;
+}
 
 const StorageManager = {
     getData() {
@@ -263,12 +311,45 @@ const StorageManager = {
         if (raw) {
             try { return JSON.parse(raw); } catch(e) { /* fallback */ }
         }
-        // Estado inicial com rivais para demonstração imediata do ranking
+        // Estado inicial com rivais clássicos do universo Hunter x Hunter
         const initial = {
             users: {
-                "Trinity": { name: "Trinity", avatar: "⚡", currentMissionIndex: 26, completedMissions: 26, score: 2600, lastActive: Date.now() - 3600000 },
-                "ZeroCool": { name: "ZeroCool", avatar: "🤖", currentMissionIndex: 17, completedMissions: 17, score: 1700, lastActive: Date.now() - 7200000 },
-                "Neo": { name: "Neo", avatar: "🥷", currentMissionIndex: 11, completedMissions: 11, score: 1100, lastActive: Date.now() - 10800000 }
+                "KilluaZoldyck": { 
+                    name: "KilluaZoldyck", 
+                    avatar: "⚡", 
+                    nen: "Transformação (Algoritmos)",
+                    serial: "#HB-9999-PY",
+                    currentMissionIndex: 28, 
+                    completedMissions: 28, 
+                    floor: 140,
+                    jenys: 28000,
+                    score: 2800, 
+                    lastActive: Date.now() - 1800000 
+                },
+                "Kurapika": { 
+                    name: "Kurapika", 
+                    avatar: "🧠", 
+                    nen: "Materialização (Arquitetura)",
+                    serial: "#HB-4040-PY",
+                    currentMissionIndex: 20, 
+                    completedMissions: 20, 
+                    floor: 100,
+                    jenys: 18000,
+                    score: 2000, 
+                    lastActive: Date.now() - 3600000 
+                },
+                "Leorio": { 
+                    name: "Leorio", 
+                    avatar: "🛡️", 
+                    nen: "Emissão (DevOps / APIs)",
+                    serial: "#HB-1234-PY",
+                    currentMissionIndex: 12, 
+                    completedMissions: 12, 
+                    floor: 60,
+                    jenys: 8500,
+                    score: 1200, 
+                    lastActive: Date.now() - 7200000 
+                }
             },
             currentUser: null
         };
@@ -286,21 +367,25 @@ const StorageManager = {
         return data.users[data.currentUser];
     },
 
-    loginOrCreateUser(name, avatar) {
+    loginOrCreateUser(name, avatar, nenAffinity) {
         const data = this.getData();
         const trimmed = name.trim();
         if (!data.users[trimmed]) {
             data.users[trimmed] = {
                 name: trimmed,
                 avatar: avatar || "🥷",
+                nen: nenAffinity || "Reforço (Backend)",
+                serial: generateHunterSerial(trimmed),
                 currentMissionIndex: 0,
                 completedMissions: 0,
+                floor: 1,
+                jenys: 0,
                 score: 0,
                 lastActive: Date.now()
             };
         } else {
-            // Atualiza avatar e data de acesso se já existia
             if (avatar) data.users[trimmed].avatar = avatar;
+            if (nenAffinity) data.users[trimmed].nen = nenAffinity;
             data.users[trimmed].lastActive = Date.now();
         }
         data.currentUser = trimmed;
@@ -316,6 +401,8 @@ const StorageManager = {
         if (missionIndexCompleted >= u.currentMissionIndex) {
             u.currentMissionIndex = missionIndexCompleted + 1;
             u.completedMissions = u.currentMissionIndex;
+            u.floor = Math.max(1, u.completedMissions * 5);
+            u.jenys = u.completedMissions * 800;
             u.score = u.completedMissions * 100;
         }
         u.lastActive = Date.now();
@@ -334,7 +421,7 @@ const StorageManager = {
 // ========================================================
 let currentUser = null;
 let activeTab = 'mod1'; // 'mod1' | 'mod2' | 'rank'
-let selectedMissionIndex = 0; // Missão sendo visualizada no momento
+let selectedMissionIndex = 0;
 
 const parser = new Parser();
 const engine = new Engine('arena');
@@ -349,8 +436,11 @@ const profileChips = document.getElementById('profile-chips');
 
 const navUserAvatar = document.getElementById('nav-user-avatar');
 const navUserName = document.getElementById('nav-user-name');
-const navUserLevel = document.getElementById('nav-user-level');
+const navUserSerial = document.getElementById('nav-user-serial');
+const navUserNen = document.getElementById('nav-user-nen');
+const navUserFloor = document.getElementById('nav-user-floor');
 const navXpPercent = document.getElementById('nav-xp-percent');
+const navJenyAmount = document.getElementById('nav-jeny-amount');
 const xpFill = document.getElementById('xp-fill');
 
 const tabBtnMod1 = document.getElementById('tab-btn-mod1');
@@ -360,9 +450,11 @@ const tabBtnRank = document.getElementById('tab-btn-rank');
 const tabContentMissions = document.getElementById('tab-content-missions');
 const tabContentRank = document.getElementById('tab-content-rank');
 
+const missionRankTag = document.getElementById('mission-rank-tag');
 const missionBadge = document.getElementById('mission-badge');
 const missionTitle = document.getElementById('mission-title');
 const missionObjective = document.getElementById('mission-objective');
+const missionRewardText = document.getElementById('mission-reward-text');
 const trackTitle = document.getElementById('track-title');
 const trackCounter = document.getElementById('track-counter');
 const achievementList = document.getElementById('achievement-list');
@@ -378,9 +470,10 @@ const bossHpText = document.getElementById('boss-hp-text');
 const bossHpBar = document.getElementById('boss-hp');
 
 // ========================================================
-// SISTEMA DE AUTENTICAÇÃO / CADASTRO DO ALUNO
+// SELEÇÃO DE AVATAR E AFINIDADE DE NEN
 // ========================================================
 let selectedAvatar = '🥷';
+let selectedNen = 'Reforço (Backend)';
 
 avatarPicker.addEventListener('click', (e) => {
     const btn = e.target.closest('.avatar-opt');
@@ -388,6 +481,7 @@ avatarPicker.addEventListener('click', (e) => {
     document.querySelectorAll('.avatar-opt').forEach(b => b.classList.remove('selected'));
     btn.classList.add('selected');
     selectedAvatar = btn.getAttribute('data-avatar');
+    selectedNen = btn.getAttribute('data-nen');
 });
 
 function renderSavedProfileChips() {
@@ -404,9 +498,9 @@ function renderSavedProfileChips() {
         const chip = document.createElement('button');
         chip.type = 'button';
         chip.className = 'profile-chip';
-        chip.innerHTML = `<span>${u.avatar}</span> <strong>${u.name}</strong> (${u.completedMissions}/40)`;
+        chip.innerHTML = `<span>${u.avatar}</span> <strong>${u.name}</strong> (${u.completedMissions}/40 - Andar ${u.floor || 1})`;
         chip.addEventListener('click', () => {
-            selectUser(u.name, u.avatar);
+            selectUser(u.name, u.avatar, u.nen);
         });
         profileChips.appendChild(chip);
     });
@@ -416,17 +510,15 @@ authForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const name = authNicknameInput.value.trim();
     if (!name) return;
-    selectUser(name, selectedAvatar);
+    selectUser(name, selectedAvatar, selectedNen);
 });
 
-function selectUser(name, avatar) {
-    currentUser = StorageManager.loginOrCreateUser(name, avatar);
+function selectUser(name, avatar, nen) {
+    currentUser = StorageManager.loginOrCreateUser(name, avatar, nen);
     authModal.classList.add('hidden');
     
-    // Define a missão atual baseada no progresso salvo
     selectedMissionIndex = Math.min(currentUser.currentMissionIndex, missions.length - 1);
     
-    // Se o aluno já estiver no módulo 2, abre automaticamente a aba do Módulo 2
     if (selectedMissionIndex >= 20) {
         switchTab('mod2');
     } else {
@@ -434,7 +526,7 @@ function selectUser(name, avatar) {
     }
 
     updateUI();
-    logConsole(`Bem-vindo, ${currentUser.name}! Progresso carregado: ${currentUser.completedMissions} missões concluídas.`, 'success');
+    logConsole(`Licença Hunter #${currentUser.serial} autenticada. Bem-vindo, ${currentUser.name}!`, 'success');
 }
 
 document.getElementById('btn-switch-user').addEventListener('click', () => {
@@ -448,7 +540,7 @@ document.getElementById('btn-open-ranking').addEventListener('click', () => {
 });
 
 // ========================================================
-// SISTEMA DE NAVEGAÇÃO POR GUIAS (TABS)
+// SISTEMA DE NAVEGAÇÃO DE FASES DO EXAME
 // ========================================================
 function switchTab(tabId) {
     activeTab = tabId;
@@ -458,9 +550,8 @@ function switchTab(tabId) {
         tabBtnMod1.classList.add('active');
         tabContentMissions.style.display = 'flex';
         tabContentRank.style.display = 'none';
-        trackTitle.innerText = "Trilha: Módulo 1 (Variáveis e Input)";
+        trackTitle.innerText = "Quadro de Caçadas: Fase 1 (Nen & Variáveis)";
         
-        // Se a missão selecionada for do módulo 2, ajusta para a última aberta do módulo 1
         if (selectedMissionIndex >= 20) {
             selectedMissionIndex = Math.min(currentUser ? currentUser.currentMissionIndex : 0, 19);
         }
@@ -468,9 +559,8 @@ function switchTab(tabId) {
         tabBtnMod2.classList.add('active');
         tabContentMissions.style.display = 'flex';
         tabContentRank.style.display = 'none';
-        trackTitle.innerText = "Trilha: Módulo 2 (Condicionais If/Else)";
+        trackTitle.innerText = "Quadro de Caçadas: Fase 2 (Reflexos If/Else)";
         
-        // Se a missão selecionada for do módulo 1, ajusta para o módulo 2
         if (selectedMissionIndex < 20) {
             selectedMissionIndex = Math.max(20, Math.min(currentUser ? currentUser.currentMissionIndex : 20, missions.length - 1));
         }
@@ -487,7 +577,6 @@ tabBtnMod1.addEventListener('click', () => switchTab('mod1'));
 tabBtnMod2.addEventListener('click', () => switchTab('mod2'));
 tabBtnRank.addEventListener('click', () => switchTab('rank'));
 
-// Navegação por setas (Anterior / Próxima)
 btnPrevMission.addEventListener('click', () => {
     if (selectedMissionIndex > 0) {
         selectedMissionIndex--;
@@ -515,43 +604,49 @@ btnNextMission.addEventListener('click', () => {
 function updateUI() {
     if (!currentUser) return;
 
-    // Atualiza cabeçalho do aluno
+    // Licença Hunter metálica
     navUserAvatar.innerText = currentUser.avatar;
     navUserName.innerText = currentUser.name;
-    const currentModule = selectedMissionIndex < 20 ? 1 : 2;
-    navUserLevel.innerText = `Nível ${currentModule} // ${selectedMissionIndex < 20 ? 'Operador de Variáveis' : 'Mestre Condicional'}`;
+    navUserSerial.innerText = currentUser.serial || generateHunterSerial(currentUser.name);
+    navUserNen.innerText = currentUser.nen || "Reforço // Backend";
+    const currentFloor = Math.max(1, (currentUser.completedMissions || 0) * 5);
+    navUserFloor.innerText = `Andar ${currentFloor} // Torre Celestial`;
 
+    // Barra de Nen & Jenys
     const totalPct = Math.round((currentUser.completedMissions / missions.length) * 100);
     navXpPercent.innerText = `${totalPct}% (${currentUser.completedMissions}/40)`;
     xpFill.style.width = `${totalPct}%`;
+    const totalJenys = (currentUser.completedMissions * 800).toLocaleString('pt-BR');
+    navJenyAmount.innerText = `${totalJenys} ₭`;
 
-    // Atualiza Card da Missão
+    // Bounty Card da Missão Atual
     const m = missions[selectedMissionIndex];
-    missionBadge.innerText = `NÍVEL ${m.id}`;
-    currentStageIndicator.innerText = `NÍVEL ${m.id}`;
+    missionRankTag.innerText = m.rank || 'RANK D';
+    missionBadge.innerText = `CAÇADA ${m.id}`;
+    currentStageIndicator.innerText = `CAÇADA ${m.id}`;
     missionTitle.innerText = m.title;
     missionObjective.innerText = m.objective;
+    missionRewardText.innerText = `+100 XP | ${m.rewardJeny || 500} ₭`;
 
-    // Setas de navegação
+    // Navegação
     btnPrevMission.disabled = (selectedMissionIndex === 0);
     const maxUnlocked = currentUser.currentMissionIndex;
     btnNextMission.disabled = (selectedMissionIndex >= maxUnlocked || selectedMissionIndex >= missions.length - 1);
 
-    // Atualiza Boss e Barra de Vida
+    // Boss Bar
     if (selectedMissionIndex < 20) {
-        bossName.innerText = "FIREWALL DO SISTEMA (MÓDULO 1)";
+        bossName.innerText = "BUG QUIMERA // CHIMERA INICIAL (FASE 1)";
         const hp = Math.max(0, 100 - (Math.min(currentUser.completedMissions, 20) * 5));
-        bossHpText.innerText = `${hp}%`;
+        bossHpText.innerText = `${hp}% HP`;
         bossHpBar.style.width = `${hp}%`;
     } else {
-        bossName.innerText = "GUARDIÃO CONDICIONAL (MÓDULO 2)";
+        bossName.innerText = "REI QUIMERA DO FIREWALL // S-RANK (FASE 2)";
         const completedInMod2 = Math.max(0, currentUser.completedMissions - 20);
         const hp = Math.max(0, 100 - (completedInMod2 * 5));
-        bossHpText.innerText = `${hp}%`;
+        bossHpText.innerText = `${hp}% HP`;
         bossHpBar.style.width = `${hp}%`;
     }
 
-    // Renderiza Lista de Missões da Guia Atual
     renderMissionsList();
 }
 
@@ -580,8 +675,11 @@ function renderMissionsList() {
         else li.classList.add('locked');
         if (isSelected) li.classList.add('active');
 
-        let icon = isCompleted ? '✅' : (isUnlocked ? '🔓' : '🔒');
-        li.innerHTML = `<span>${icon}</span> <span><strong>${m.id}</strong> - ${m.title}</span>`;
+        let icon = isCompleted ? '⚔️' : (isUnlocked ? '🎯' : '🔒');
+        li.innerHTML = `
+            <span>${icon} <strong>${m.id}</strong> - ${m.title}</span>
+            <span class="bounty-rank-badge">${m.rank}</span>
+        `;
 
         if (isUnlocked) {
             li.addEventListener('click', () => {
@@ -597,7 +695,7 @@ function renderMissionsList() {
 }
 
 // ========================================================
-// RENDERIZAÇÃO DO RANKING DOS ALUNOS
+// TORRE CELESTIAL // PLACAR DE ANDARES
 // ========================================================
 function renderRankingTable() {
     const data = StorageManager.getData();
@@ -622,28 +720,31 @@ function renderRankingTable() {
         else if (index === 1) badge = '🥈';
         else if (index === 2) badge = '🥉';
 
+        const floor = Math.max(1, (u.completedMissions || 0) * 5);
+        const jenys = ((u.completedMissions || 0) * 800).toLocaleString('pt-BR');
+
         tr.innerHTML = `
             <td><span class="rank-badge">${badge}</span></td>
-            <td>${u.avatar} <strong>${u.name}</strong></td>
-            <td>${u.completedMissions}/40</td>
-            <td><span style="color: var(--neon-green)">${u.score || (u.completedMissions * 100)} XP</span></td>
+            <td>${u.avatar} <strong>${u.name}</strong> <small style="color:var(--nen-green)">(${u.nen ? u.nen.split(' ')[0] : 'Hunter'})</small></td>
+            <td><strong style="color:var(--gold-nen)">Andar ${floor}</strong> (${u.completedMissions}/40)</td>
+            <td><span style="color: var(--nen-cyan)">${jenys} ₭</span></td>
         `;
         tbody.appendChild(tr);
     });
 }
 
-// Exportar JSON com o banco de dados dos alunos
+// Exportar dados da Torre em JSON
 document.getElementById('btn-export-json').addEventListener('click', () => {
     const data = StorageManager.getData();
     const str = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data, null, 2));
     const dlAnchor = document.createElement('a');
     dlAnchor.setAttribute("href", str);
-    dlAnchor.setAttribute("download", `hunter_x_bug_ranking_${Date.now()}.json`);
+    dlAnchor.setAttribute("download", `hunter_x_bug_torre_celestial_${Date.now()}.json`);
     dlAnchor.click();
 });
 
 // ========================================================
-// TERMINAL & EXECUÇÃO DO SCRIPT PYTHON
+// TERMINAL HUNTER & EXECUÇÃO DO NEN
 // ========================================================
 function logConsole(msg, type = 'normal') {
     const div = document.createElement('div');
@@ -667,30 +768,29 @@ document.getElementById('run-btn').addEventListener('click', () => {
     if (engine.isAnimating) return;
 
     const code = codeEditor.value;
-    logConsole("Compilando e Executando Script...", "normal");
+    logConsole("Canalizando Aura de Nen e Executando Script...", "normal");
 
     try {
         const commands = parser.parse(code);
         
         if (commands.length === 0) {
-            logConsole("Nenhum comando reconhecido ou executado.", "error");
+            logConsole("Nenhum comando reconhecido ou liberado.", "error");
             return;
         }
         
         const onPrint = (msg) => logConsole(`[Print] ${msg}`, 'print');
 
         engine.execute(commands, (points) => {
-            logConsole("Execução finalizada.", "normal");
+            logConsole("Execução tática finalizada.", "normal");
             
             const currentMission = missions[selectedMissionIndex];
             if (currentMission.validate(points, commands, code)) {
-                logConsole(`SUCESSO! Nível ${currentMission.id} concluído com perfeição!`, "success");
+                logConsole(`SUCESSO! Bug da Caçada ${currentMission.id} exterminado com precisão!`, "success");
                 
-                // Limpa o terminal de código após acerto
                 codeEditor.value = '';
                 completeCurrentMission();
             } else {
-                logConsole("FALHA: O script não atendeu ao objetivo da missão. Tente novamente!", "error");
+                logConsole("FALHA: A técnica não atendeu ao objetivo do contrato. Refaça o plano!", "error");
             }
         }, onPrint);
 
@@ -708,9 +808,9 @@ function completeCurrentMission() {
     const isLastOfMod2 = (selectedMissionIndex === 39);
 
     if (xpText) {
-        if (isLastOfMod1) xpText.innerText = "💥 FIREWALL DESTRUÍDO! MÓDULO 2 DESBLOQUEADO!";
-        else if (isLastOfMod2) xpText.innerText = "👑 GUARDIÃO DERROTADO! VOCÊ VENCEU O HUNTER x BUG!";
-        else xpText.innerText = "+ 100 XP | Conhecimento Absorvido!";
+        if (isLastOfMod1) xpText.innerText = "💥 BUG QUIMERA EXTERMINADO! FASE 2 DESBLOQUEADA!";
+        else if (isLastOfMod2) xpText.innerText = "👑 REI QUIMERA DERROTADO! VOCÊ CONQUISTOU A LICENÇA HUNTER VITALÍCIA!";
+        else xpText.innerText = `+ RECOMPENSA: 100 XP | ${missions[selectedMissionIndex].rewardJeny || 500} ₭`;
     }
 
     if (overlay) overlay.classList.add('active');
@@ -723,14 +823,11 @@ function completeCurrentMission() {
     setTimeout(() => {
         if (overlay) overlay.classList.remove('active');
 
-        // Salva o progresso do aluno no JSON / LocalStorage
         StorageManager.saveUserProgress(selectedMissionIndex);
         currentUser = StorageManager.getCurrentUser();
 
-        // Se estava na missão de fronteira, avança automaticamente
         if (selectedMissionIndex < missions.length - 1) {
             selectedMissionIndex++;
-            // Se acabou de passar para o Módulo 2, muda de guia automaticamente
             if (selectedMissionIndex === 20 && activeTab !== 'mod2') {
                 switchTab('mod2');
             }
