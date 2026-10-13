@@ -28,27 +28,32 @@ Este documento contém o gabarito oficial com os objetivos, conceitos trabalhado
 - [1.19 - Desafio Variáveis](#nível-119---desafio-variáveis)
 - [1.20 - BOSS FINAL DAS VARIÁVEIS](#nível-120---boss-final-das-variáveis)
 
-### [Módulo 2: Tomada de Decisão com Condicionais (2.1 a 2.20)](#-módulo-2-condicionais-if-elif-else)
-- [2.1 - O Primeiro IF](#nível-21---o-primeiro-if)
-- [2.2 - Comparação de Igualdade (==)](#nível-22---comparação-de-igualdade-)
-- [2.3 - Comparação de Diferença (!=)](#nível-23---comparação-de-diferença-)
-- [2.4 - Maior Que (>)](#nível-24---maior-que-)
-- [2.5 - Menor Que (<)](#nível-25---menor-que-)
-- [2.6 - Maior ou Igual (>=)](#nível-26---maior-ou-igual-)
-- [2.7 - Menor ou Igual (<=)](#nível-27---menor-ou-igual-)
-- [2.8 - A Bifurcação: IF e ELSE](#nível-28---a-bifurcação-if-e-else)
-- [2.9 - IF / ELSE com Input](#nível-29---if--else-com-input)
-- [2.10 - Validação Numérica com IF / ELSE](#nível-210---validação-numérica-com-if--else)
-- [2.11 - Três Caminhos: O ELIF](#nível-211---três-caminhos-o-elif)
-- [2.12 - Semáforo do Sistema (ELIF)](#nível-212---semáforo-do-sistema-elif)
-- [2.13 - Operador Lógico AND (E)](#nível-213---operador-lógico-and-e)
-- [2.14 - Operador Lógico OR (OU)](#nível-214---operador-lógico-or-ou)
-- [2.15 - Operador NOT (NÃO)](#nível-215---operador-not-não)
-- [2.16 - Faixas Numéricas com AND](#nível-216---faixas-numéricas-com-and)
-- [2.17 - Condicionais Aninhadas (IF dentro de IF)](#nível-217---condicionais-aninhadas-if-dentro-de-if)
-- [2.18 - Decisão com Ações na Arena](#nível-218---decisão-com-ações-na-arena)
-- [2.19 - Decisão com Cores e Manobra](#nível-219---decisão-com-cores-e-manobra)
-- [2.20 - BOSS DO FIREWALL: O GUARDIÃO CONDICIONAL](#nível-220---boss-do-firewall-o-guardião-condicional)
+### [Fase 2: Tomada de Decisão com Condicionais (2.1 a 2.20)](#-fase-2-condicionais-if-elif-else)
+- [2.1 - O Primeiro IF](#caçada-21---o-primeiro-if)
+- [2.2 - Comparação de Igualdade (==)](#caçada-22---comparação-de-igualdade-)
+- [2.3 - Comparação de Diferença (!=)](#caçada-23---comparação-de-diferença-)
+- [2.4 - Maior Que (>)](#caçada-24---maior-que-)
+- [2.5 - Menor Que (<)](#caçada-25---menor-que-)
+- [2.6 - Maior ou Igual (>=)](#caçada-26---maior-ou-igual-)
+- [2.7 - Menor ou Igual (<=)](#caçada-27---menor-ou-igual-)
+- [2.8 - A Bifurcação: IF e ELSE](#caçada-28---a-bifurcação-if-e-else)
+- [2.9 - IF / ELSE com Input](#caçada-29---if--else-com-input)
+- [2.10 - Validação Numérica com IF / ELSE](#caçada-210---validação-numérica-com-if--else)
+- [2.11 - Três Caminhos: O ELIF](#caçada-211---três-caminhos-o-elif)
+- [2.12 - Semáforo do Sistema (ELIF)](#caçada-212---semáforo-do-sistema-elif)
+- [2.13 - Operador Lógico AND (E)](#caçada-213---operador-lógico-and-e)
+- [2.14 - Operador Lógico OR (OU)](#caçada-214---operador-lógico-or-ou)
+- [2.15 - Operador NOT (NÃO)](#caçada-215---operador-not-não)
+- [2.16 - Faixas Numéricas com AND](#caçada-216---faixas-numéricas-com-and)
+- [2.17 - Condicionais Aninhadas (IF dentro de IF)](#caçada-217---condicionais-aninhadas-if-dentro-de-if)
+- [2.18 - Decisão com Ações na Arena](#caçada-218---decisão-com-ações-na-arena)
+- [2.19 - Decisão com Cores e Manobra](#caçada-219---decisão-com-cores-e-manobra)
+- [2.20 - BOSS DA FASE 2: REI QUIMERA DO FIREWALL](#caçada-220---boss-da-fase-2-rei-quimera-do-firewall)
+
+### [Fase 3: Os Três Chefões Quimera (3.1 a 3.3)](#-fase-3-os-três-chefões-quimera-exame-supremo-31---33)
+- [3.1 - CHEFÃO 1: NEFERPITOU // O ENIGMA DA ENERGIA EN](#caçada-31---chefão-1-neferpitou--o-enigma-da-energia-en)
+- [3.2 - CHEFÃO 2: SHAIAPOUF // O LABIRINTO DE ESCAMAS](#caçada-32---chefão-2-shaiapouf--o-labirinto-de-escamas)
+- [3.3 - CHEFÃO SUPREMO: REI MERUEM // O PINÁCULO DO EXAME](#caçada-33---chefão-supremo-rei-meruem--o-pináculo-do-exame)
 
 ---
 
@@ -389,4 +394,105 @@ elif codigo == 50:
     frente(150)
 else:
     print('Codigo Invalido')
+```
+
+---
+
+# 👑 FASE 3: OS TRÊS CHEFÕES QUIMERA (EXAME SUPREMO 3.1 - 3.3)
+
+Esta fase especial valida de forma profunda e combinada **TODOS os conceitos das Fases 1 e 2**: variáveis de múltiplos tipos, inputs múltiplos, conversões numéricas (`int` e `float`), operadores lógicos (`and`, `or`, `not`), estruturas condicionais compostas e aninhadas (`if`, `elif`, `else`), manipulação de strings e manobras táticas no Canvas com giros angulares e cores de aura de Nen.
+
+---
+
+### Caçada 3.1 - CHEFÃO 1: NEFERPITOU // O ENIGMA DA ENERGIA EN
+- **Rank:** `RANK S - GUARDA REAL`
+- **Recompensa:** `10.000 ₭ | 2.500 XP`
+- **Conceito:** Inputs múltiplos com conversão `int()` e `float()`, cálculo de impacto matemático, condicionais com `and` e `or`, conversão `str()` para concatenação e manobras de Nen no Canvas com `cor()` e giros angulares.
+- **Solução:**
+```python
+nome = input('Hunter: ')
+nivel = int(input('Nivel Nen: '))
+distancia = float(input('Distancia: '))
+impacto = int(nivel * (100 / distancia))
+
+if nivel >= 80 and distancia <= 50.0:
+    cor('red')
+    direita(90)
+    frente(150)
+    print('Golpe Critico em Pitou: ' + str(impacto))
+elif nivel >= 50 or distancia < 100.0:
+    cor('blue')
+    esquerda(90)
+    frente(80)
+    print('Ataque Tatico: ' + str(impacto))
+else:
+    cor('yellow')
+    frente(30)
+    print('Recuo Estrategico')
+```
+
+---
+
+### Caçada 3.2 - CHEFÃO 2: SHAIAPOUF // O LABIRINTO DE ESCAMAS
+- **Rank:** `RANK S - GUARDA REAL`
+- **Recompensa:** `25.000 ₭ | 5.000 XP`
+- **Conceito:** Inversão booleana com operador `not`, condicionais aninhadas (múltiplos níveis de indentação), operadores relacionais `==` e `!=`, operador lógico `and`, controle de tentativas e traçado geométrico de fuga no Canvas.
+- **Solução:**
+```python
+chave = input('Chave de Nen: ')
+tentativas = int(input('Tentativas: '))
+bloqueado = False
+
+if not bloqueado:
+    if chave == 'hxh' and tentativas > 0:
+        cor('cyan')
+        frente(100)
+        direita(90)
+        frente(100)
+        direita(90)
+        print('Ilusao de Pouf Quebrada em ' + str(tentativas) + ' tentativas!')
+    elif chave != 'hxh':
+        cor('purple')
+        frente(40)
+        print('Chave Incorreta: Hipnose Mantida')
+    else:
+        print('Tentativas Esgotadas')
+else:
+    print('Aura Selada')
+```
+
+---
+
+### Caçada 3.3 - CHEFÃO SUPREMO: REI MERUEM // O PINÁCULO DO EXAME
+- **Rank:** `RANK SS - O REI QUIMERA`
+- **Recompensa:** `100.000 ₭ | 10.000 XP | LICENÇA HUNTER VITALÍCIA COM 3 ESTRELAS`
+- **Conceito:** O desafio definitivo de Python. Exige a união total de: 4 entradas de tipos diferentes, cálculo percentual com `float` e cast para `int`, lógica booleana composta com `and`, `or`, `not` agrupados com parênteses, cadeia completa `if / elif / else` aninhada, e execução do ataque supremo com giros de 45° e 90° e cores de aura no Canvas.
+- **Solução:**
+```python
+hunter = input('Nome do Hunter: ')
+afinidade = input('Afinidade: ')
+poder = int(input('Poder de Nen: '))
+foco = float(input('Taxa de Foco: '))
+vivo = True
+dano = int(poder * foco)
+
+if vivo and not (poder <= 0):
+    if (afinidade == 'reforco' or afinidade == 'especialista') and dano >= 80:
+        cor('green')
+        direita(45)
+        frente(160)
+        direita(90)
+        frente(80)
+        print('Vitoria sobre o Rei por ' + hunter + '! Dano Critico: ' + str(dano))
+    elif dano >= 50 and foco >= 0.5:
+        cor('yellow')
+        esquerda(45)
+        frente(100)
+        print('Golpe Parcial no Rei: Dano ' + str(dano))
+    else:
+        cor('red')
+        frente(40)
+        print('Ataque Defletido pelo Rei Meruem')
+else:
+    print('Hunter Nocauteado sem Poder')
 ```

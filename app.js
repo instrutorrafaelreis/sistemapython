@@ -286,17 +286,128 @@ const missions = [
     },
     {
         id: '2.20', module: 2, rank: 'RANK S - BOSS', rewardJeny: 5000,
-        title: "BOSS SUPREMO: REI QUIMERA DO FIREWALL",
+        title: "BOSS DA FASE 2: REI QUIMERA DO FIREWALL",
         objective: "Peça codigo = int(input('Codigo: ')). Se 100: direita(90) e frente(150). elif 50: esquerda(90) e frente(150). else: print('Codigo Invalido').",
         tips: ["codigo = int(input('Codigo: '))", "if codigo == 100:", "    direita(90)", "    frente(150)", "elif codigo == 50:", "    esquerda(90)", "    frente(150)", "else:", "    print('Codigo Invalido')"],
         validate: (p, c, code) => code.includes('int(input') && code.includes('if') && code.includes('elif') && (c.some(cmd => cmd.type === 'frente') || c.some(cmd => cmd.type === 'print'))
+    },
+
+    // ==========================================
+    // FASE 3: OS TRÊS CHEFÕES QUIMERA (EXAME SUPREMO 3.1 - 3.3)
+    // Validação profunda combinando Fases 1 e 2
+    // ==========================================
+    {
+        id: '3.1', module: 3, rank: 'RANK S - GUARDA REAL', rewardJeny: 10000,
+        title: "CHEFÃO 1: NEFERPITOU // O ENIGMA DA ENERGIA EN",
+        objective: "Pitou ativou seu En mortal! Sintetize Fase 1 e 2: Leia nome = input('Hunter: '), nivel = int(input('Nivel Nen: ')) e distancia = float(input('Distancia: ')). Calcule impacto = int(nivel * (100 / distancia)). Se nivel >= 80 and distancia <= 50.0: defina cor('red'), vire direita(90), avance frente(150) e exiba print('Golpe Critico em Pitou: ' + str(impacto)). elif nivel >= 50 or distancia < 100.0: defina cor('blue'), vire esquerda(90), avance frente(80) e exiba print('Ataque Tatico: ' + str(impacto)). else: defina cor('yellow'), avance frente(30) e exiba print('Recuo Estrategico').",
+        tips: [
+            "nome = input('Hunter: ')",
+            "nivel = int(input('Nivel Nen: '))",
+            "distancia = float(input('Distancia: '))",
+            "impacto = int(nivel * (100 / distancia))",
+            "if nivel >= 80 and distancia <= 50.0:",
+            "    cor('red')",
+            "    direita(90)",
+            "    frente(150)",
+            "    print('Golpe Critico em Pitou: ' + str(impacto))",
+            "elif nivel >= 50 or distancia < 100.0:",
+            "    cor('blue')",
+            "    esquerda(90)",
+            "    frente(80)",
+            "    print('Ataque Tatico: ' + str(impacto))",
+            "else:",
+            "    cor('yellow')",
+            "    frente(30)",
+            "    print('Recuo Estrategico')"
+        ],
+        validate: (p, c, code) => {
+            const hasInputs = code.includes('int(input') && code.includes('float(input');
+            const hasConds = code.includes('if') && code.includes('elif') && code.includes('else') && code.includes('and') && code.includes('or');
+            const hasCanvas = c.some(cmd => cmd.type === 'cor') && c.some(cmd => cmd.type === 'frente');
+            const hasPrint = c.some(cmd => cmd.type === 'print');
+            return hasInputs && hasConds && hasCanvas && hasPrint;
+        }
+    },
+    {
+        id: '3.2', module: 3, rank: 'RANK S - GUARDA REAL', rewardJeny: 25000,
+        title: "CHEFÃO 2: SHAIAPOUF // O LABIRINTO DE ESCAMAS",
+        objective: "Pouf criou um labirinto hipnótico de ilusões com travas aninhadas! Receba chave = input('Chave de Nen: ') e tentativas = int(input('Tentativas: ')). Crie a flag bloqueado = False. Se not bloqueado: verifique se chave == 'hxh' and tentativas > 0: defina cor('cyan'), trace a rota de fuga frente(100), direita(90), frente(100), direita(90) e exiba print('Ilusao de Pouf Quebrada em ' + str(tentativas) + ' tentativas!'). elif chave != 'hxh': defina cor('purple'), avance frente(40) e exiba print('Chave Incorreta: Hipnose Mantida'). else: print('Tentativas Esgotadas'). else: print('Aura Selada').",
+        tips: [
+            "chave = input('Chave de Nen: ')",
+            "tentativas = int(input('Tentativas: '))",
+            "bloqueado = False",
+            "if not bloqueado:",
+            "    if chave == 'hxh' and tentativas > 0:",
+            "        cor('cyan')",
+            "        frente(100)",
+            "        direita(90)",
+            "        frente(100)",
+            "        direita(90)",
+            "        print('Ilusao de Pouf Quebrada em ' + str(tentativas) + ' tentativas!')",
+            "    elif chave != 'hxh':",
+            "        cor('purple')",
+            "        frente(40)",
+            "        print('Chave Incorreta: Hipnose Mantida')",
+            "    else:",
+            "        print('Tentativas Esgotadas')",
+            "else:",
+            "    print('Aura Selada')"
+        ],
+        validate: (p, c, code) => {
+            const hasNot = code.includes('not');
+            const hasNested = (code.match(/if\b/g) || []).length >= 2;
+            const hasConds = code.includes('and') && (code.includes('==') || code.includes('!='));
+            const hasCanvas = c.some(cmd => cmd.type === 'cor') && c.some(cmd => cmd.type === 'frente');
+            const hasPrint = c.some(cmd => cmd.type === 'print');
+            return hasNot && hasNested && hasConds && hasCanvas && hasPrint;
+        }
+    },
+    {
+        id: '3.3', module: 3, rank: 'RANK SS - O REI QUIMERA', rewardJeny: 100000,
+        title: "CHEFÃO SUPREMO: REI MERUEM // O PINÁCULO DO EXAME",
+        objective: "A batalha final para obter a Licença Hunter Vitalícia com 3 Estrelas! Integre todas as técnicas de Python: Receba hunter = input('Nome do Hunter: '), afinidade = input('Afinidade: '), poder = int(input('Poder de Nen: ')), foco = float(input('Taxa de Foco: ')). Crie vivo = True. Calcule dano = int(poder * foco). Se vivo and not (poder <= 0): se (afinidade == 'reforco' or afinidade == 'especialista') and dano >= 80: defina cor('green'), lance o Impacto Zero direita(45), frente(160), direita(90), frente(80) e exiba print('Vitoria sobre o Rei por ' + hunter + '! Dano Critico: ' + str(dano)). elif dano >= 50 and foco >= 0.5: defina cor('yellow'), vire esquerda(45), avance frente(100) e exiba print('Golpe Parcial no Rei: Dano ' + str(dano)). else: defina cor('red'), avance frente(40) e exiba print('Ataque Defletido pelo Rei Meruem'). else: print('Hunter Nocauteado sem Poder').",
+        tips: [
+            "hunter = input('Nome do Hunter: ')",
+            "afinidade = input('Afinidade: ')",
+            "poder = int(input('Poder de Nen: '))",
+            "foco = float(input('Taxa de Foco: '))",
+            "vivo = True",
+            "dano = int(poder * foco)",
+            "if vivo and not (poder <= 0):",
+            "    if (afinidade == 'reforco' or afinidade == 'especialista') and dano >= 80:",
+            "        cor('green')",
+            "        direita(45)",
+            "        frente(160)",
+            "        direita(90)",
+            "        frente(80)",
+            "        print('Vitoria sobre o Rei por ' + hunter + '! Dano Critico: ' + str(dano))",
+            "    elif dano >= 50 and foco >= 0.5:",
+            "        cor('yellow')",
+            "        esquerda(45)",
+            "        frente(100)",
+            "        print('Golpe Parcial no Rei: Dano ' + str(dano))",
+            "    else:",
+            "        cor('red')",
+            "        frente(40)",
+            "        print('Ataque Defletido pelo Rei Meruem')",
+            "else:",
+            "    print('Hunter Nocauteado sem Poder')"
+        ],
+        validate: (p, c, code) => {
+            const hasTypes = code.includes('int(input') && code.includes('float(input') && code.includes('int(') && code.includes('str(');
+            const hasLogicals = code.includes('and') && code.includes('or') && code.includes('not');
+            const hasNested = (code.match(/if\b/g) || []).length >= 2 && code.includes('elif') && code.includes('else');
+            const hasCombatMove = c.some(cmd => cmd.type === 'cor') && c.filter(cmd => cmd.type === 'frente').length >= 1;
+            const hasPrint = c.some(cmd => cmd.type === 'print');
+            return hasTypes && hasLogicals && hasNested && hasCombatMove && hasPrint;
+        }
     }
 ];
 
 // ========================================================
 // GERENCIADOR DE DADOS EM JSON (LOCALSTORAGE)
 // ========================================================
-const STORAGE_KEY = 'hunter_x_bug_storage_v3';
+const STORAGE_KEY = 'hunter_x_bug_storage_v4';
 
 function generateHunterSerial(name) {
     let hash = 0;
@@ -314,16 +425,28 @@ const StorageManager = {
         // Estado inicial com rivais clássicos do universo Hunter x Hunter
         const initial = {
             users: {
+                "GingFreecss": {
+                    name: "GingFreecss",
+                    avatar: "👑",
+                    nen: "Especialização (IA & Sec)",
+                    serial: "#HB-0000-PY",
+                    currentMissionIndex: 43,
+                    completedMissions: 43,
+                    floor: 200,
+                    jenys: 150000,
+                    score: 4300,
+                    lastActive: Date.now() - 600000
+                },
                 "KilluaZoldyck": { 
                     name: "KilluaZoldyck", 
                     avatar: "⚡", 
                     nen: "Transformação (Algoritmos)",
                     serial: "#HB-9999-PY",
-                    currentMissionIndex: 28, 
-                    completedMissions: 28, 
-                    floor: 140,
-                    jenys: 28000,
-                    score: 2800, 
+                    currentMissionIndex: 40, 
+                    completedMissions: 40, 
+                    floor: 180,
+                    jenys: 45000,
+                    score: 4000, 
                     lastActive: Date.now() - 1800000 
                 },
                 "Kurapika": { 
@@ -331,11 +454,11 @@ const StorageManager = {
                     avatar: "🧠", 
                     nen: "Materialização (Arquitetura)",
                     serial: "#HB-4040-PY",
-                    currentMissionIndex: 20, 
-                    completedMissions: 20, 
-                    floor: 100,
-                    jenys: 18000,
-                    score: 2000, 
+                    currentMissionIndex: 32, 
+                    completedMissions: 32, 
+                    floor: 120,
+                    jenys: 28000,
+                    score: 3200, 
                     lastActive: Date.now() - 3600000 
                 },
                 "Leorio": { 
@@ -343,11 +466,11 @@ const StorageManager = {
                     avatar: "🛡️", 
                     nen: "Emissão (DevOps / APIs)",
                     serial: "#HB-1234-PY",
-                    currentMissionIndex: 12, 
-                    completedMissions: 12, 
+                    currentMissionIndex: 18, 
+                    completedMissions: 18, 
                     floor: 60,
-                    jenys: 8500,
-                    score: 1200, 
+                    jenys: 12000,
+                    score: 1800, 
                     lastActive: Date.now() - 7200000 
                 }
             },
@@ -401,8 +524,14 @@ const StorageManager = {
         if (missionIndexCompleted >= u.currentMissionIndex) {
             u.currentMissionIndex = missionIndexCompleted + 1;
             u.completedMissions = u.currentMissionIndex;
-            u.floor = Math.max(1, u.completedMissions * 5);
-            u.jenys = u.completedMissions * 800;
+            u.floor = Math.max(1, Math.min(200, u.completedMissions * 5));
+            
+            // Soma os Jenys acumulados
+            let totalJ = 0;
+            for (let i = 0; i < u.completedMissions; i++) {
+                totalJ += (missions[i] ? missions[i].rewardJeny : 500);
+            }
+            u.jenys = totalJ;
             u.score = u.completedMissions * 100;
         }
         u.lastActive = Date.now();
@@ -420,7 +549,7 @@ const StorageManager = {
 // CONTROLE DE ESTADO DA APLICAÇÃO
 // ========================================================
 let currentUser = null;
-let activeTab = 'mod1'; // 'mod1' | 'mod2' | 'rank'
+let activeTab = 'mod1'; // 'mod1' | 'mod2' | 'mod3' | 'rank'
 let selectedMissionIndex = 0;
 
 const parser = new Parser();
@@ -445,6 +574,7 @@ const xpFill = document.getElementById('xp-fill');
 
 const tabBtnMod1 = document.getElementById('tab-btn-mod1');
 const tabBtnMod2 = document.getElementById('tab-btn-mod2');
+const tabBtnMod3 = document.getElementById('tab-btn-mod3');
 const tabBtnRank = document.getElementById('tab-btn-rank');
 
 const tabContentMissions = document.getElementById('tab-content-missions');
@@ -498,7 +628,7 @@ function renderSavedProfileChips() {
         const chip = document.createElement('button');
         chip.type = 'button';
         chip.className = 'profile-chip';
-        chip.innerHTML = `<span>${u.avatar}</span> <strong>${u.name}</strong> (${u.completedMissions}/40 - Andar ${u.floor || 1})`;
+        chip.innerHTML = `<span>${u.avatar}</span> <strong>${u.name}</strong> (${u.completedMissions}/43 - Andar ${u.floor || 1})`;
         chip.addEventListener('click', () => {
             selectUser(u.name, u.avatar, u.nen);
         });
@@ -519,7 +649,9 @@ function selectUser(name, avatar, nen) {
     
     selectedMissionIndex = Math.min(currentUser.currentMissionIndex, missions.length - 1);
     
-    if (selectedMissionIndex >= 20) {
+    if (selectedMissionIndex >= 40) {
+        switchTab('mod3');
+    } else if (selectedMissionIndex >= 20) {
         switchTab('mod2');
     } else {
         switchTab('mod1');
@@ -540,11 +672,13 @@ document.getElementById('btn-open-ranking').addEventListener('click', () => {
 });
 
 // ========================================================
-// SISTEMA DE NAVEGAÇÃO DE FASES DO EXAME
+// SISTEMA DE NAVEGAÇÃO DE FASES DO EXAME (TABS)
 // ========================================================
 function switchTab(tabId) {
     activeTab = tabId;
-    [tabBtnMod1, tabBtnMod2, tabBtnRank].forEach(b => b.classList.remove('active'));
+    [tabBtnMod1, tabBtnMod2, tabBtnMod3, tabBtnRank].forEach(b => {
+        if (b) b.classList.remove('active');
+    });
 
     if (tabId === 'mod1') {
         tabBtnMod1.classList.add('active');
@@ -561,8 +695,17 @@ function switchTab(tabId) {
         tabContentRank.style.display = 'none';
         trackTitle.innerText = "Quadro de Caçadas: Fase 2 (Reflexos If/Else)";
         
-        if (selectedMissionIndex < 20) {
-            selectedMissionIndex = Math.max(20, Math.min(currentUser ? currentUser.currentMissionIndex : 20, missions.length - 1));
+        if (selectedMissionIndex < 20 || selectedMissionIndex >= 40) {
+            selectedMissionIndex = Math.max(20, Math.min(currentUser ? currentUser.currentMissionIndex : 20, 39));
+        }
+    } else if (tabId === 'mod3') {
+        if (tabBtnMod3) tabBtnMod3.classList.add('active');
+        tabContentMissions.style.display = 'flex';
+        tabContentRank.style.display = 'none';
+        trackTitle.innerText = "Quadro de Caçadas: Fase 3 (Chefões Quimera)";
+        
+        if (selectedMissionIndex < 40) {
+            selectedMissionIndex = Math.max(40, Math.min(currentUser ? currentUser.currentMissionIndex : 40, missions.length - 1));
         }
     } else if (tabId === 'rank') {
         tabBtnRank.classList.add('active');
@@ -575,6 +718,7 @@ function switchTab(tabId) {
 
 tabBtnMod1.addEventListener('click', () => switchTab('mod1'));
 tabBtnMod2.addEventListener('click', () => switchTab('mod2'));
+if (tabBtnMod3) tabBtnMod3.addEventListener('click', () => switchTab('mod3'));
 tabBtnRank.addEventListener('click', () => switchTab('rank'));
 
 btnPrevMission.addEventListener('click', () => {
@@ -583,6 +727,7 @@ btnPrevMission.addEventListener('click', () => {
         const m = missions[selectedMissionIndex];
         if (m.module === 1 && activeTab !== 'mod1') switchTab('mod1');
         else if (m.module === 2 && activeTab !== 'mod2') switchTab('mod2');
+        else if (m.module === 3 && activeTab !== 'mod3') switchTab('mod3');
         else updateUI();
     }
 });
@@ -594,6 +739,7 @@ btnNextMission.addEventListener('click', () => {
         const m = missions[selectedMissionIndex];
         if (m.module === 1 && activeTab !== 'mod1') switchTab('mod1');
         else if (m.module === 2 && activeTab !== 'mod2') switchTab('mod2');
+        else if (m.module === 3 && activeTab !== 'mod3') switchTab('mod3');
         else updateUI();
     }
 });
@@ -609,14 +755,14 @@ function updateUI() {
     navUserName.innerText = currentUser.name;
     navUserSerial.innerText = currentUser.serial || generateHunterSerial(currentUser.name);
     navUserNen.innerText = currentUser.nen || "Reforço // Backend";
-    const currentFloor = Math.max(1, (currentUser.completedMissions || 0) * 5);
+    const currentFloor = Math.max(1, Math.min(200, (currentUser.completedMissions || 0) * 5));
     navUserFloor.innerText = `Andar ${currentFloor} // Torre Celestial`;
 
     // Barra de Nen & Jenys
     const totalPct = Math.round((currentUser.completedMissions / missions.length) * 100);
-    navXpPercent.innerText = `${totalPct}% (${currentUser.completedMissions}/40)`;
+    navXpPercent.innerText = `${totalPct}% (${currentUser.completedMissions}/${missions.length})`;
     xpFill.style.width = `${totalPct}%`;
-    const totalJenys = (currentUser.completedMissions * 800).toLocaleString('pt-BR');
+    const totalJenys = (currentUser.jenys || (currentUser.completedMissions * 800)).toLocaleString('pt-BR');
     navJenyAmount.innerText = `${totalJenys} ₭`;
 
     // Bounty Card da Missão Atual
@@ -626,25 +772,43 @@ function updateUI() {
     currentStageIndicator.innerText = `CAÇADA ${m.id}`;
     missionTitle.innerText = m.title;
     missionObjective.innerText = m.objective;
-    missionRewardText.innerText = `+100 XP | ${m.rewardJeny || 500} ₭`;
+    missionRewardText.innerText = `+ RECOMPENSA: ${m.rewardJeny ? (m.rewardJeny / 10).toFixed(0) : 100} XP | ${m.rewardJeny || 500} ₭`;
 
     // Navegação
     btnPrevMission.disabled = (selectedMissionIndex === 0);
     const maxUnlocked = currentUser.currentMissionIndex;
     btnNextMission.disabled = (selectedMissionIndex >= maxUnlocked || selectedMissionIndex >= missions.length - 1);
 
-    // Boss Bar
+    // Monitor do Boss Bar na Arena
     if (selectedMissionIndex < 20) {
         bossName.innerText = "BUG QUIMERA // CHIMERA INICIAL (FASE 1)";
         const hp = Math.max(0, 100 - (Math.min(currentUser.completedMissions, 20) * 5));
         bossHpText.innerText = `${hp}% HP`;
         bossHpBar.style.width = `${hp}%`;
-    } else {
+    } else if (selectedMissionIndex < 40) {
         bossName.innerText = "REI QUIMERA DO FIREWALL // S-RANK (FASE 2)";
-        const completedInMod2 = Math.max(0, currentUser.completedMissions - 20);
+        const completedInMod2 = Math.max(0, Math.min(currentUser.completedMissions, 40) - 20);
         const hp = Math.max(0, 100 - (completedInMod2 * 5));
         bossHpText.innerText = `${hp}% HP`;
         bossHpBar.style.width = `${hp}%`;
+    } else {
+        // Fase 3 (Chefões Finais)
+        if (selectedMissionIndex === 40) {
+            bossName.innerText = "👑 CHEFÃO 1: GUARDA REAL NEFERPITOU // RANK S";
+            const hp = currentUser.completedMissions > 40 ? 0 : 100;
+            bossHpText.innerText = `${hp}% HP`;
+            bossHpBar.style.width = `${hp}%`;
+        } else if (selectedMissionIndex === 41) {
+            bossName.innerText = "👑 CHEFÃO 2: GUARDA REAL SHAIAPOUF // RANK S";
+            const hp = currentUser.completedMissions > 41 ? 0 : 100;
+            bossHpText.innerText = `${hp}% HP`;
+            bossHpBar.style.width = `${hp}%`;
+        } else {
+            bossName.innerText = "👑 CHEFÃO SUPREMO: REI MERUEM // RANK SS FINAL";
+            const hp = currentUser.completedMissions > 42 ? 0 : 100;
+            bossHpText.innerText = `${hp}% HP`;
+            bossHpBar.style.width = `${hp}%`;
+        }
     }
 
     renderMissionsList();
@@ -652,9 +816,16 @@ function updateUI() {
 
 function renderMissionsList() {
     achievementList.innerHTML = '';
-    const isMod1 = (activeTab === 'mod1');
-    const startIdx = isMod1 ? 0 : 20;
-    const endIdx = isMod1 ? 20 : 40;
+    let startIdx = 0;
+    let endIdx = 20;
+
+    if (activeTab === 'mod1') {
+        startIdx = 0; endIdx = 20;
+    } else if (activeTab === 'mod2') {
+        startIdx = 20; endIdx = 40;
+    } else if (activeTab === 'mod3') {
+        startIdx = 40; endIdx = missions.length; // 40 a 43
+    }
     
     let completedInCurrentTab = 0;
     const maxUnlocked = currentUser ? currentUser.currentMissionIndex : 0;
@@ -691,7 +862,8 @@ function renderMissionsList() {
         achievementList.appendChild(li);
     }
 
-    trackCounter.innerText = `${completedInCurrentTab} / 20`;
+    const totalInTab = (activeTab === 'mod3') ? 3 : 20;
+    trackCounter.innerText = `${completedInCurrentTab} / ${totalInTab}`;
 }
 
 // ========================================================
@@ -706,7 +878,7 @@ function renderRankingTable() {
         if (b.completedMissions !== a.completedMissions) {
             return b.completedMissions - a.completedMissions;
         }
-        return b.score - a.score;
+        return (b.jenys || 0) - (a.jenys || 0);
     });
 
     sortedUsers.forEach((u, index) => {
@@ -720,13 +892,13 @@ function renderRankingTable() {
         else if (index === 1) badge = '🥈';
         else if (index === 2) badge = '🥉';
 
-        const floor = Math.max(1, (u.completedMissions || 0) * 5);
-        const jenys = ((u.completedMissions || 0) * 800).toLocaleString('pt-BR');
+        const floor = Math.max(1, Math.min(200, (u.completedMissions || 0) * 5));
+        const jenys = (u.jenys || (u.completedMissions || 0) * 800).toLocaleString('pt-BR');
 
         tr.innerHTML = `
             <td><span class="rank-badge">${badge}</span></td>
             <td>${u.avatar} <strong>${u.name}</strong> <small style="color:var(--nen-green)">(${u.nen ? u.nen.split(' ')[0] : 'Hunter'})</small></td>
-            <td><strong style="color:var(--gold-nen)">Andar ${floor}</strong> (${u.completedMissions}/40)</td>
+            <td><strong style="color:var(--gold-nen)">Andar ${floor}</strong> (${u.completedMissions}/${missions.length})</td>
             <td><span style="color: var(--nen-cyan)">${jenys} ₭</span></td>
         `;
         tbody.appendChild(tr);
@@ -785,12 +957,12 @@ document.getElementById('run-btn').addEventListener('click', () => {
             
             const currentMission = missions[selectedMissionIndex];
             if (currentMission.validate(points, commands, code)) {
-                logConsole(`SUCESSO! Bug da Caçada ${currentMission.id} exterminado com precisão!`, "success");
+                logConsole(`SUCESSO! O contrato da Caçada ${currentMission.id} foi cumprido com honras!`, "success");
                 
                 codeEditor.value = '';
                 completeCurrentMission();
             } else {
-                logConsole("FALHA: A técnica não atendeu ao objetivo do contrato. Refaça o plano!", "error");
+                logConsole("FALHA: A técnica não atendeu ao objetivo do contrato. Refaça seu script de Nen!", "error");
             }
         }, onPrint);
 
@@ -804,13 +976,22 @@ function completeCurrentMission() {
     const bossContainer = document.querySelector('.boss-container');
     const xpText = document.getElementById('xp-gain-text');
     
-    const isLastOfMod1 = (selectedMissionIndex === 19);
-    const isLastOfMod2 = (selectedMissionIndex === 39);
+    const currentM = missions[selectedMissionIndex];
 
     if (xpText) {
-        if (isLastOfMod1) xpText.innerText = "💥 BUG QUIMERA EXTERMINADO! FASE 2 DESBLOQUEADA!";
-        else if (isLastOfMod2) xpText.innerText = "👑 REI QUIMERA DERROTADO! VOCÊ CONQUISTOU A LICENÇA HUNTER VITALÍCIA!";
-        else xpText.innerText = `+ RECOMPENSA: 100 XP | ${missions[selectedMissionIndex].rewardJeny || 500} ₭`;
+        if (selectedMissionIndex === 19) {
+            xpText.innerText = "💥 BUG QUIMERA EXTERMINADO! FASE 2 DESBLOQUEADA!";
+        } else if (selectedMissionIndex === 39) {
+            xpText.innerText = "👑 FASE 2 CONCLUÍDA! O SALÃO DOS CHEFÕES (FASE 3) ESTÁ ABERTO!";
+        } else if (selectedMissionIndex === 40) {
+            xpText.innerText = "💥 PITOU FOI DERROTADA! O LABIRINTO DE POUF SE ABRE!";
+        } else if (selectedMissionIndex === 41) {
+            xpText.innerText = "💥 POUF FOI DESTRUÍDO! O SALÃO DO REI MERUEM ESTÁ ABERTO!";
+        } else if (selectedMissionIndex === 42) {
+            xpText.innerText = "🏆 MERUEM DERROTADO! VOCÊ CONQUISTOU A LICENÇA HUNTER VITALÍCIA COM 3 ESTRELAS!";
+        } else {
+            xpText.innerText = `+ RECOMPENSA: ${currentM.rewardJeny || 500} ₭ | EXP AUMENTADA!`;
+        }
     }
 
     if (overlay) overlay.classList.add('active');
@@ -830,11 +1011,13 @@ function completeCurrentMission() {
             selectedMissionIndex++;
             if (selectedMissionIndex === 20 && activeTab !== 'mod2') {
                 switchTab('mod2');
+            } else if (selectedMissionIndex === 40 && activeTab !== 'mod3') {
+                switchTab('mod3');
             }
         }
 
         updateUI();
-    }, 2200);
+    }, 2400);
 }
 
 // ========================================================
@@ -846,7 +1029,8 @@ function init() {
         currentUser = savedUser;
         authModal.classList.add('hidden');
         selectedMissionIndex = Math.min(currentUser.currentMissionIndex, missions.length - 1);
-        if (selectedMissionIndex >= 20) activeTab = 'mod2';
+        if (selectedMissionIndex >= 40) activeTab = 'mod3';
+        else if (selectedMissionIndex >= 20) activeTab = 'mod2';
         updateUI();
     } else {
         renderSavedProfileChips();
