@@ -1,4 +1,4 @@
-# 🎯 Gabarito Oficial - Nexus Academy (Python Mastery)
+# 🎯 Gabarito Oficial - Hunter x Bug (Python Mastery)
 
 Este documento contém o gabarito oficial com os objetivos, conceitos trabalhados e as respostas em código Python para todos os estágios do simulador.
 
@@ -210,10 +210,10 @@ if porta_aberta:
 ```
 
 ### Nível 2.2 - Comparação de Igualdade (==)
-- **Objetivo:** No Python usamos == para checar igualdade. Crie chave = 'nexus'. Se chave == 'nexus': dê print('Chave aceita').
+- **Objetivo:** No Python usamos == para checar igualdade. Crie chave = 'hunter'. Se chave == 'hunter': dê print('Chave aceita').
 ```python
-chave = 'nexus'
-if chave == 'nexus':
+chave = 'hunter'
+if chave == 'hunter':
     print('Chave aceita')
 ```
 
