@@ -1,5 +1,5 @@
 // ========================================================
-// NEXUS ACADEMY - MOTOR PEDAGÓGICO & GERENCIADOR DE ESTADO
+// HUNTER x BUG - MOTOR PEDAGÓGICO & GERENCIADOR DE ESTADO
 // ========================================================
 
 const missions = [
@@ -138,8 +138,8 @@ const missions = [
     },
     {
         id: '2.2', module: 2, title: "Comparação de Igualdade (==)",
-        objective: "No Python usamos == para checar igualdade. Crie chave = 'nexus'. Se chave == 'nexus': dê print('Chave aceita').",
-        tips: ["chave = 'nexus'", "if chave == 'nexus':", "    print('Chave aceita')"],
+        objective: "No Python usamos == para checar igualdade. Crie chave = 'hunter'. Se chave == 'hunter': dê print('Chave aceita').",
+        tips: ["chave = 'hunter'", "if chave == 'hunter':", "    print('Chave aceita')"],
         validate: (p, c, code) => code.includes('==') && code.includes('if') && c.some(cmd => cmd.type === 'print' && String(cmd.value).toLowerCase().includes('chave'))
     },
     {
@@ -638,7 +638,7 @@ document.getElementById('btn-export-json').addEventListener('click', () => {
     const str = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data, null, 2));
     const dlAnchor = document.createElement('a');
     dlAnchor.setAttribute("href", str);
-    dlAnchor.setAttribute("download", `nexus_academy_ranking_${Date.now()}.json`);
+    dlAnchor.setAttribute("download", `hunter_x_bug_ranking_${Date.now()}.json`);
     dlAnchor.click();
 });
 
@@ -709,7 +709,7 @@ function completeCurrentMission() {
 
     if (xpText) {
         if (isLastOfMod1) xpText.innerText = "💥 FIREWALL DESTRUÍDO! MÓDULO 2 DESBLOQUEADO!";
-        else if (isLastOfMod2) xpText.innerText = "👑 GUARDIÃO DERROTADO! VOCÊ VENCEU A NEXUS ACADEMY!";
+        else if (isLastOfMod2) xpText.innerText = "👑 GUARDIÃO DERROTADO! VOCÊ VENCEU O HUNTER x BUG!";
         else xpText.innerText = "+ 100 XP | Conhecimento Absorvido!";
     }
 
