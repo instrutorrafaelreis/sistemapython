@@ -501,6 +501,7 @@ const StorageManager = {
                 serial: generateHunterSerial(trimmed),
                 currentMissionIndex: 0,
                 completedMissions: 0,
+                nenEnergy: 100,
                 floor: 1,
                 jenys: 0,
                 score: 0,
@@ -509,6 +510,7 @@ const StorageManager = {
         } else {
             if (avatar) data.users[trimmed].avatar = avatar;
             if (nenAffinity) data.users[trimmed].nen = nenAffinity;
+            if (data.users[trimmed].nenEnergy === undefined) data.users[trimmed].nenEnergy = 100;
             data.users[trimmed].lastActive = Date.now();
         }
         data.currentUser = trimmed;
@@ -758,10 +760,23 @@ function updateUI() {
     const currentFloor = Math.max(1, Math.min(200, (currentUser.completedMissions || 0) * 5));
     navUserFloor.innerText = `Andar ${currentFloor} // Torre Celestial`;
 
-    // Barra de Nen & Jenys
-    const totalPct = Math.round((currentUser.completedMissions / missions.length) * 100);
-    navXpPercent.innerText = `${totalPct}% (${currentUser.completedMissions}/${missions.length})`;
-    xpFill.style.width = `${totalPct}%`;
+    // Barra de Energia de Nen (HP/Aura) e Jenys
+    const energy = (currentUser.nenEnergy !== undefined) ? currentUser.nenEnergy : 100;
+    navXpPercent.innerText = energy === 0 ? `0% AURA (ZETSU)` : `${energy}% AURA`;
+    xpFill.style.width = `${energy}%`;
+
+    // Transição dinâmica de cores da aura conforme o dano recebido
+    if (energy > 60) {
+        xpFill.style.background = 'linear-gradient(90deg, var(--nen-green), var(--nen-cyan))';
+        xpFill.style.boxShadow = '0 0 12px var(--nen-green)';
+    } else if (energy > 25) {
+        xpFill.style.background = 'linear-gradient(90deg, var(--gold-nen), #F59E0B)';
+        xpFill.style.boxShadow = '0 0 12px var(--gold-nen)';
+    } else {
+        xpFill.style.background = 'linear-gradient(90deg, var(--bug-red), #B91C1C)';
+        xpFill.style.boxShadow = '0 0 16px var(--bug-red)';
+    }
+
     const totalJenys = (currentUser.jenys || (currentUser.completedMissions * 800)).toLocaleString('pt-BR');
     navJenyAmount.innerText = `${totalJenys} ₭`;
 
@@ -936,6 +951,126 @@ document.getElementById('btn-reset-code').addEventListener('click', () => {
     codeEditor.value = '';
 });
 
+// ========================================================
+// SISTEMA ANTI-TRAPAÇA & MECÂNICA DE DANO DE NEN (AURA COMBAT)
+// ========================================================
+const cheatAlertBanner = document.getElementById('cheat-alert-banner');
+const nenFloatBadge = document.getElementById('nen-float-badge');
+let cheatBannerTimeout = null;
+let nenFloatTimeout = null;
+
+function showNenFloatBadge(text, type = 'damage') {
+    if (!nenFloatBadge) return;
+    nenFloatBadge.innerText = text;
+    nenFloatBadge.className = `nen-float-badge ${type}`;
+    clearTimeout(nenFloatTimeout);
+    nenFloatTimeout = setTimeout(() => {
+        nenFloatBadge.className = 'nen-float-badge';
+    }, 1800);
+}
+
+function applyNenDamage(amount, reason = "Violação das regras do Exame Hunter") {
+    if (!currentUser) return;
+
+    const data = StorageManager.getData();
+    const u = data.users[currentUser.name];
+    if (!u) return;
+
+    if (u.nenEnergy === undefined || u.nenEnergy === null) {
+        u.nenEnergy = 100;
+    }
+
+    u.nenEnergy = Math.max(0, u.nenEnergy - amount);
+    StorageManager.saveData(data);
+    currentUser = u;
+
+    // Flash e tremor de tela (Impacto de Dano)
+    const dmgOverlay = document.getElementById('damage-overlay');
+    if (dmgOverlay) {
+        dmgOverlay.classList.remove('active');
+        void dmgOverlay.offsetWidth; // Força recálculo de reflow para reiniciar animação
+        dmgOverlay.classList.add('active');
+        setTimeout(() => {
+            dmgOverlay.classList.remove('active');
+        }, 500);
+    }
+
+    // Tremor e aura avermelhada no editor
+    codeEditor.classList.add('cheat-warning');
+    setTimeout(() => {
+        codeEditor.classList.remove('cheat-warning');
+    }, 600);
+
+    // Banner de alerta no topo do editor
+    const bannerMsg = `💥 DANO RECEBIDO! VOCÊ PERDEU ${amount}% DE NEN! DIGITE O CÓDIGO MANUALMENTE!`;
+    if (cheatAlertBanner) {
+        cheatAlertBanner.innerText = bannerMsg;
+        cheatAlertBanner.classList.add('active');
+        clearTimeout(cheatBannerTimeout);
+        cheatBannerTimeout = setTimeout(() => {
+            cheatAlertBanner.classList.remove('active');
+        }, 3000);
+    }
+
+    // Indicador flutuante na barra de Nen
+    showNenFloatBadge(`-${amount}% NEN`, 'damage');
+
+    // Registro no Terminal Hunter
+    logConsole(`💥 DANO RECEBIDO: -${amount}% de Nen! ${reason}. (Aura restante: ${u.nenEnergy}%)`, 'error');
+
+    if (u.nenEnergy === 0) {
+        logConsole("⚠️ ESTADO DE ZETSU CRÍTICO: Sua aura foi esgotada (0% Nen)! Resolva a caçada digitando o código para canalizar seu Nen novamente!", "error");
+    }
+
+    // Atualização imediata do medidor de Aura
+    updateUI();
+}
+
+function restoreNen(amount = 20) {
+    if (!currentUser) return;
+    const data = StorageManager.getData();
+    const u = data.users[currentUser.name];
+    if (!u) return;
+
+    if (u.nenEnergy === undefined || u.nenEnergy === null) {
+        u.nenEnergy = 100;
+    }
+
+    if (u.nenEnergy >= 100) return;
+
+    const oldEnergy = u.nenEnergy;
+    u.nenEnergy = Math.min(100, u.nenEnergy + amount);
+    const recovered = u.nenEnergy - oldEnergy;
+    StorageManager.saveData(data);
+    currentUser = u;
+
+    if (recovered > 0) {
+        showNenFloatBadge(`+${recovered}% NEN`, 'heal');
+        logConsole(`✨ AURA RESTAURADA: +${recovered}% de Nen recuperado pela vitória! (Nen atual: ${u.nenEnergy}%)`, 'success');
+        updateUI();
+    }
+}
+
+// Bloqueio do evento nativo de colar (Ctrl+V, botão direito -> Colar)
+codeEditor.addEventListener('paste', (e) => {
+    e.preventDefault();
+    applyNenDamage(15, "Tentativa de colar código interceptada pela Barreira Anti-Cola");
+});
+
+// Bloqueio de arrastar e soltar texto dentro do editor
+codeEditor.addEventListener('drop', (e) => {
+    e.preventDefault();
+    applyNenDamage(15, "Arrasto de código interceptado pela Barreira de Nen");
+});
+
+// Bloqueio de atalhos de teclado de cola (Ctrl+V ou Cmd+V)
+codeEditor.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && (e.key === 'v' || e.key === 'V')) {
+        e.preventDefault();
+        applyNenDamage(15, "Atalho de colar (Ctrl+V) detectado");
+    }
+});
+
 document.getElementById('run-btn').addEventListener('click', () => {
     if (engine.isAnimating) return;
 
@@ -963,11 +1098,13 @@ document.getElementById('run-btn').addEventListener('click', () => {
                 completeCurrentMission();
             } else {
                 logConsole("FALHA: A técnica não atendeu ao objetivo do contrato. Refaça seu script de Nen!", "error");
+                applyNenDamage(5, "Contra-ataque do Bug por técnica incorreta");
             }
         }, onPrint);
 
     } catch (e) {
         logConsole(e.message, "error");
+        applyNenDamage(5, "Sobrecarga de Nen por erro de sintaxe");
     }
 });
 
@@ -1006,6 +1143,7 @@ function completeCurrentMission() {
 
         StorageManager.saveUserProgress(selectedMissionIndex);
         currentUser = StorageManager.getCurrentUser();
+        restoreNen(20);
 
         if (selectedMissionIndex < missions.length - 1) {
             selectedMissionIndex++;

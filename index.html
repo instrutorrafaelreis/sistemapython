@@ -10,6 +10,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Rajdhani:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
+    <!-- OVERLAY VISUAL DE DANO NA TELA -->
+    <div id="damage-overlay" class="damage-overlay">
+        <div class="damage-overlay-content">
+            <span class="damage-overlay-icon">💥</span>
+            <span class="damage-overlay-text">DANO RECEBIDO! VOCÊ PERDEU NEN!</span>
+        </div>
+    </div>
+
     <!-- MODAL DE IDENTIFICAÇÃO / LICENÇA HUNTER -->
     <div id="auth-modal" class="modal-overlay">
         <div class="modal-card hunter-card">
@@ -92,11 +100,12 @@
                 </div>
             </div>
 
-            <!-- BARRA DE DOMÍNIO DE NEN (XP) & JENYS -->
+            <!-- BARRA DE ENERGIA DE NEN (HP/AURA) & JENYS -->
             <div class="nen-status-container">
                 <div class="nen-meta">
-                    <span>DOMÍNIO DE NEN</span>
-                    <span id="nav-xp-percent">0%</span>
+                    <span id="nen-bar-label">ENERGIA DE NEN</span>
+                    <span id="nav-xp-percent">100% AURA</span>
+                    <span id="nen-float-badge" class="nen-float-badge"></span>
                 </div>
                 <div class="xp-bar">
                     <div class="xp-fill" id="xp-fill"></div>
@@ -209,10 +218,16 @@
                     <span class="terminal-dot green"></span>
                     <span class="terminal-name">TERMINAL HUNTER // <span id="current-stage-indicator">CAÇADA 1.1</span></span>
                 </div>
-                <button id="btn-reset-code" class="text-link-btn" title="Limpar editor">Limpar Editor</button>
+                <div class="editor-header-actions">
+                    <span class="anti-cheat-pill" title="Bloqueio de cola ativo">🔒 DIGITAÇÃO MANUAL</span>
+                    <button id="btn-reset-code" class="text-link-btn" title="Limpar editor">Limpar Editor</button>
+                </div>
             </div>
 
-            <textarea id="code-editor" spellcheck="false" placeholder=""></textarea>
+            <div class="editor-wrapper">
+                <textarea id="code-editor" spellcheck="false" autocomplete="off" placeholder="" onpaste="return false;" ondrop="return false;"></textarea>
+                <div id="cheat-alert-banner" class="cheat-alert-banner">⚠️ COLA BLOQUEADA! DIGITE O CÓDIGO COM SEU PRÓPRIO NEN!</div>
+            </div>
             
             <button id="run-btn" class="neon-btn hunter-action-btn">
                 <span class="btn-text">⚔️ LIBERAR NEN (EXECUTAR CÓDIGO)</span>
