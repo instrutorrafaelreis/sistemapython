@@ -5,64 +5,210 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nexus Academy - Python Mastery</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
-        <!-- Painel Lateral: Missões & Status -->
-        <aside class="panel left-panel">
-            <header>
-                <h1>Nexus Academy</h1>
-                <p style="font-size: 0.8rem; color: var(--neon-green); margin-bottom: 10px;">Python Training Facility</p>
-                <div class="status">
-                    <span id="level-display">Lvl: 1</span>
-                    <div class="xp-bar"><div class="xp-fill" id="xp-fill"></div></div>
-                </div>
-            </header>
+    <!-- MODAL DE CADASTRO / LOGIN DO ALUNO -->
+    <div id="auth-modal" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-header">
+                <span class="cyber-badge">ACESSO RESTRITO</span>
+                <h2>NEXUS ACADEMY // LOGIN</h2>
+                <p>Identifique-se para carregar seu progresso salvo e competir no ranking.</p>
+            </div>
             
-            <section class="mission-card">
-                <h2>Missão Atual</h2>
-                <h3 id="mission-title">Carregando...</h3>
-                <p id="mission-objective">...</p>
-            </section>
+            <form id="auth-form" class="auth-form">
+                <div class="form-group">
+                    <label for="auth-nickname">Codinome / Nome do Aluno:</label>
+                    <input type="text" id="auth-nickname" placeholder="Ex: CyberHacker" maxlength="16" required autocomplete="off">
+                </div>
 
-            <section class="achievements" style="flex-grow: 1; overflow-y: auto;">
-                <h2>Trilha de Aprendizado</h2>
-                <ul id="achievement-list">
-                    <!-- Gerado dinamicamente pelo app.js -->
-                </ul>
-            </section>
+                <div class="form-group">
+                    <label>Escolha seu Avatar Cyber:</label>
+                    <div class="avatar-picker" id="avatar-picker">
+                        <button type="button" class="avatar-opt selected" data-avatar="🥷">🥷</button>
+                        <button type="button" class="avatar-opt" data-avatar="🤖">🤖</button>
+                        <button type="button" class="avatar-opt" data-avatar="⚡">⚡</button>
+                        <button type="button" class="avatar-opt" data-avatar="👾">👾</button>
+                        <button type="button" class="avatar-opt" data-avatar="🧠">🧠</button>
+                        <button type="button" class="avatar-opt" data-avatar="🛡️">🛡️</button>
+                        <button type="button" class="avatar-opt" data-avatar="💻">💻</button>
+                        <button type="button" class="avatar-opt" data-avatar="🚀">🚀</button>
+                    </div>
+                </div>
+
+                <button type="submit" class="neon-btn btn-block">ENTRAR NO SISTEMA</button>
+            </form>
+
+            <div class="saved-profiles" id="saved-profiles-section" style="display: none;">
+                <h3>Perfis Detectados no Terminal:</h3>
+                <div class="profile-chips" id="profile-chips"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CABEÇALHO SUPERIOR (STATUS & PERFIL DO ALUNO) -->
+    <header class="top-nav">
+        <div class="brand-area">
+            <h1 class="glitch-text">NEXUS ACADEMY</h1>
+            <span class="system-status"><span class="pulse-dot"></span> TERMINAL ATIVO</span>
+        </div>
+
+        <div class="user-profile-bar" id="user-profile-bar">
+            <div class="profile-info">
+                <span class="user-avatar" id="nav-user-avatar">🥷</span>
+                <div class="user-text">
+                    <span class="user-name" id="nav-user-name">Convidado</span>
+                    <span class="user-level" id="nav-user-level">Nível 1 // Recruta</span>
+                </div>
+            </div>
+
+            <div class="user-xp-container">
+                <div class="xp-meta">
+                    <span>PROGRESSO GERAL</span>
+                    <span id="nav-xp-percent">0%</span>
+                </div>
+                <div class="xp-bar">
+                    <div class="xp-fill" id="xp-fill"></div>
+                </div>
+            </div>
+
+            <div class="header-actions">
+                <button id="btn-open-ranking" class="icon-btn" title="Ver Ranking de Alunos">🏆 RANKING</button>
+                <button id="btn-switch-user" class="icon-btn danger" title="Trocar de Aluno / Novo Cadastro">👤 TROCAR ALUNO</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- CONTAINER PRINCIPAL DA APLICAÇÃO (3 COLUNAS) -->
+    <div class="container">
+        <!-- PAINEL LATERAL: NAVEGAÇÃO POR GUIAS (MÓDULO 1, MÓDULO 2, RANKING) -->
+        <aside class="panel left-panel">
+            <!-- GUIAS DE NAVEGAÇÃO -->
+            <nav class="module-tabs">
+                <button class="tab-btn active" id="tab-btn-mod1" data-tab="mod1">
+                    <span class="tab-icon">📦</span>
+                    <span class="tab-label">Módulo 1</span>
+                    <span class="tab-sub">Variáveis</span>
+                </button>
+                <button class="tab-btn" id="tab-btn-mod2" data-tab="mod2">
+                    <span class="tab-icon">⚡</span>
+                    <span class="tab-label">Módulo 2</span>
+                    <span class="tab-sub">Condicionais</span>
+                </button>
+                <button class="tab-btn" id="tab-btn-rank" data-tab="rank">
+                    <span class="tab-icon">🏆</span>
+                    <span class="tab-label">Ranking</span>
+                    <span class="tab-sub">Placar</span>
+                </button>
+            </nav>
+
+            <!-- CONTEÚDO DAS GUIAS: MISSÕES (MÓDULO 1 E 2) -->
+            <div class="tab-content active" id="tab-content-missions">
+                <!-- CARD DA MISSÃO ATUALMENTE SELECIONADA -->
+                <section class="mission-card">
+                    <div class="mission-header-bar">
+                        <span class="mission-badge" id="mission-badge">NÍVEL 1.1</span>
+                        <div class="mission-nav-arrows">
+                            <button id="btn-prev-mission" class="nav-arrow-btn" title="Missão Anterior">◀</button>
+                            <button id="btn-next-mission" class="nav-arrow-btn" title="Próxima Missão">▶</button>
+                        </div>
+                    </div>
+                    <h3 id="mission-title">Carregando...</h3>
+                    <p id="mission-objective">...</p>
+                </section>
+
+                <!-- LISTA DA TRILHA DE MISSÕES -->
+                <section class="achievements-section">
+                    <div class="achievements-header">
+                        <h4 id="track-title">Trilha: Módulo 1 (Variáveis e Input)</h4>
+                        <span id="track-counter" class="track-counter">0 / 20</span>
+                    </div>
+                    <ul id="achievement-list" class="achievement-list">
+                        <!-- Gerado dinamicamente via JS -->
+                    </ul>
+                </section>
+            </div>
+
+            <!-- CONTEÚDO DA GUIA: RANKING DOS ALUNOS -->
+            <div class="tab-content" id="tab-content-rank" style="display: none;">
+                <section class="ranking-panel">
+                    <div class="ranking-header">
+                        <h3>PLACAR DE LÍDERES</h3>
+                        <p>Classificação em tempo real dos alunos da Nexus Academy</p>
+                    </div>
+                    <div class="ranking-table-container">
+                        <table class="ranking-table">
+                            <thead>
+                                <tr>
+                                    <th>Pos</th>
+                                    <th>Aluno</th>
+                                    <th>Fases</th>
+                                    <th>XP</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ranking-table-body">
+                                <!-- Gerado dinamicamente via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <button id="btn-export-json" class="cyber-sub-btn">📥 EXPORTAR DADOS EM JSON</button>
+                </section>
+            </div>
         </aside>
 
-        <!-- Painel Central: Editor de Código -->
+        <!-- PAINEL CENTRAL: TERMINAL PYTHON & CONSOLE -->
         <main class="panel center-panel">
             <div class="editor-header">
-                <h2>Terminal (Python)</h2>
+                <div class="terminal-title">
+                    <span class="terminal-dot red"></span>
+                    <span class="terminal-dot yellow"></span>
+                    <span class="terminal-dot green"></span>
+                    <span class="terminal-name">TERMINAL PYTHON // <span id="current-stage-indicator">NÍVEL 1.1</span></span>
+                </div>
+                <button id="btn-reset-code" class="text-link-btn" title="Limpar editor">Limpar</button>
             </div>
+
             <textarea id="code-editor" spellcheck="false" placeholder=""></textarea>
-            <button id="run-btn" class="neon-btn">EXECUTAR SCRIPT</button>
+            
+            <button id="run-btn" class="neon-btn">
+                <span class="btn-text">EXECUTAR SCRIPT PYTHON</span>
+                <span class="btn-glow"></span>
+            </button>
+
             <div class="console">
-                <div class="console-header">Console Output</div>
+                <div class="console-header">
+                    <span>CONSOLE OUTPUT // LOG DE EXECUÇÃO</span>
+                    <button id="btn-clear-console" class="text-link-btn">Limpar Logs</button>
+                </div>
                 <div id="console-output" class="console-body">Sistema pronto. Compilador Python virtual ativo...</div>
             </div>
         </main>
 
-        <!-- Painel Direito: Arena Visual -->
+        <!-- PAINEL DIREITO: ARENA VISUAL (CANVAS & BOSS) -->
         <aside class="panel right-panel">
             <div class="boss-container">
-                <span class="boss-name">FIREWALL DO SISTEMA</span>
+                <div class="boss-meta">
+                    <span class="boss-name" id="boss-name">FIREWALL DO SISTEMA</span>
+                    <span class="boss-hp-text" id="boss-hp-text">100%</span>
+                </div>
                 <div class="hp-bar"><div class="hp-fill" id="boss-hp"></div></div>
             </div>
+
             <div class="canvas-container">
                 <canvas id="arena" width="500" height="500"></canvas>
                 <div id="success-overlay">
-                    <h2>ACESSO CONCEDIDO</h2>
-                    <p id="xp-gain-text">+ XP Adquirido</p>
+                    <div class="success-box">
+                        <span class="success-icon">🔓</span>
+                        <h2>ACESSO CONCEDIDO</h2>
+                        <p id="xp-gain-text">+ XP Adquirido</p>
+                    </div>
                 </div>
             </div>
         </aside>
     </div>
 
+    <!-- SCRIPTS -->
     <script src="parser.js"></script>
     <script src="engine.js"></script>
     <script src="app.js"></script>
