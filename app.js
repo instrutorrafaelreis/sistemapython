@@ -515,6 +515,9 @@ const StorageManager = {
         }
         data.currentUser = trimmed;
         this.saveData(data);
+        if (typeof CloudSyncManager !== 'undefined') {
+            CloudSyncManager.syncStudent(data.users[trimmed]);
+        }
         return data.users[trimmed];
     },
 
@@ -538,12 +541,157 @@ const StorageManager = {
         }
         u.lastActive = Date.now();
         this.saveData(data);
+        if (typeof CloudSyncManager !== 'undefined') {
+            CloudSyncManager.syncStudent(u);
+        }
     },
 
     logout() {
         const data = this.getData();
         data.currentUser = null;
         this.saveData(data);
+    }
+};
+
+// ========================================================
+// SINCRONIZAÇÃO EM NUVEM // GOOGLE SHEETS & APPS SCRIPT
+// ========================================================
+// O instrutor pode colar a URL aqui para todos os alunos ou configurar via interface
+const HUNTER_CONFIG_SHEETS_URL = "";
+
+const CloudSyncManager = {
+    storageKey: 'hunter_google_sheets_url',
+
+    getUrl() {
+        const customUrl = localStorage.getItem(this.storageKey);
+        if (customUrl && customUrl.trim() !== '') return customUrl.trim();
+        return (typeof HUNTER_CONFIG_SHEETS_URL !== 'undefined') ? HUNTER_CONFIG_SHEETS_URL.trim() : '';
+    },
+
+    setUrl(url) {
+        if (url && url.trim() !== '') {
+            localStorage.setItem(this.storageKey, url.trim());
+        } else {
+            localStorage.removeItem(this.storageKey);
+        }
+        this.updateStatusUI();
+    },
+
+    isConnected() {
+        return !!this.getUrl();
+    },
+
+    setStatus(state, message) {
+        const badge = document.getElementById('cloud-sync-status');
+        if (!badge) return;
+        badge.className = `cloud-sync-status ${state}`;
+        badge.innerText = message;
+    },
+
+    updateStatusUI() {
+        if (this.isConnected()) {
+            this.setStatus('online', '🟢 Planilha da Turma Conectada (Google Sheets)');
+        } else {
+            this.setStatus('offline', '⚪ Modo Local (Clique em Conectar Planilha)');
+        }
+    },
+
+    async syncStudent(student) {
+        const url = this.getUrl();
+        if (!url || !student) return;
+
+        this.setStatus('syncing', '⚡ Sincronizando com a Planilha da Turma...');
+        try {
+            const payload = {
+                action: 'save_progress',
+                student: {
+                    name: student.name,
+                    serial: student.serial || generateHunterSerial(student.name),
+                    avatar: student.avatar || '🥷',
+                    nen: student.nen || 'Reforço',
+                    completedMissions: student.completedMissions || 0,
+                    currentMissionIndex: student.currentMissionIndex || 0,
+                    floor: student.floor || 1,
+                    jenys: student.jenys || 0,
+                    score: student.score || 0,
+                    nenEnergy: (student.nenEnergy !== undefined ? student.nenEnergy : 100),
+                    lastActive: Date.now()
+                }
+            };
+
+            // Usa POST com Content-Type text/plain para contornar bloqueios de CORS preflight no Google Apps Script
+            const res = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify(payload)
+            });
+
+            if (res.ok) {
+                const data = await res.json();
+                if (data && data.ranking) {
+                    this.mergeRanking(data.ranking);
+                }
+                this.setStatus('online', '🟢 Planilha da Turma Sincronizada');
+                logConsole(`☁️ Progresso de ${student.name} salvo na Planilha do Instrutor!`, 'success');
+            } else {
+                this.setStatus('online', '🟢 Planilha da Turma Conectada');
+            }
+        } catch (err) {
+            console.warn("Aviso de sincronização com Google Sheets:", err);
+            this.setStatus('offline', '⚪ Modo Local (Falha temporária ao sincronizar)');
+        }
+    },
+
+    async fetchRanking() {
+        const url = this.getUrl();
+        if (!url) return;
+
+        this.setStatus('syncing', '⚡ Atualizando placar da Planilha da Turma...');
+        try {
+            const res = await fetch(url);
+            if (res.ok) {
+                const data = await res.json();
+                if (data && data.ranking) {
+                    this.mergeRanking(data.ranking);
+                    renderRankingTable();
+                    this.setStatus('online', `🟢 Planilha Conectada (${data.ranking.length} Hunters)`);
+                    logConsole(`🏛️ Placar da Torre atualizado com ${data.ranking.length} Hunters da Planilha!`, 'success');
+                }
+            } else {
+                this.setStatus('online', '🟢 Planilha da Turma Conectada');
+            }
+        } catch (err) {
+            console.warn("Erro ao buscar ranking na Planilha:", err);
+            this.setStatus('offline', '⚪ Modo Local (Falha ao ler ranking da Planilha)');
+        }
+    },
+
+    mergeRanking(cloudRanking) {
+        if (!Array.isArray(cloudRanking) || cloudRanking.length === 0) return;
+        const localData = StorageManager.getData();
+        cloudRanking.forEach(c => {
+            if (!c || !c.name) return;
+            if (!localData.users[c.name]) {
+                localData.users[c.name] = {
+                    name: c.name,
+                    avatar: c.avatar || '🥷',
+                    nen: c.nen || 'Reforço',
+                    serial: c.serial || '#HB-0000-PY',
+                    completedMissions: c.completedMissions || 0,
+                    currentMissionIndex: c.completedMissions || 0,
+                    floor: c.floor || 1,
+                    jenys: c.jenys || 0,
+                    nenEnergy: c.nenEnergy !== undefined ? c.nenEnergy : 100,
+                    lastActive: Date.now()
+                };
+            } else if (currentUser && c.name !== currentUser.name) {
+                localData.users[c.name].completedMissions = c.completedMissions;
+                localData.users[c.name].floor = c.floor;
+                localData.users[c.name].jenys = c.jenys;
+                localData.users[c.name].nenEnergy = c.nenEnergy !== undefined ? c.nenEnergy : 100;
+            }
+        });
+        StorageManager.saveData(localData);
     }
 };
 
@@ -714,6 +862,9 @@ function switchTab(tabId) {
         tabContentMissions.style.display = 'none';
         tabContentRank.style.display = 'flex';
         renderRankingTable();
+        if (typeof CloudSyncManager !== 'undefined') {
+            CloudSyncManager.fetchRanking();
+        }
     }
     updateUI();
 }
@@ -930,6 +1081,40 @@ document.getElementById('btn-export-json').addEventListener('click', () => {
     dlAnchor.click();
 });
 
+// Sincronizar Placar da Planilha Google manualmente
+const btnSyncSheets = document.getElementById('btn-sync-sheets');
+if (btnSyncSheets) {
+    btnSyncSheets.addEventListener('click', () => {
+        if (!CloudSyncManager.isConnected()) {
+            alert("Nenhuma Planilha Google conectada ainda.\nClique em '⚙️ CONECTAR PLANILHA GOOGLE' e insira a URL da Web App do Google Apps Script!");
+            return;
+        }
+        CloudSyncManager.fetchRanking();
+    });
+}
+
+// Configurar URL da Planilha Google (Apps Script Web App)
+const btnConfigSheets = document.getElementById('btn-config-sheets');
+if (btnConfigSheets) {
+    btnConfigSheets.addEventListener('click', () => {
+        const current = CloudSyncManager.getUrl();
+        const input = prompt(
+            "Cole aqui a URL da Web App do Google Apps Script (gerada em 'Implantar -> Nova implantação' na sua Planilha):\nExemplo: https://script.google.com/macros/s/.../exec\n\n(Deixe em branco para desconectar):",
+            current
+        );
+        if (input !== null) {
+            CloudSyncManager.setUrl(input);
+            if (input.trim()) {
+                logConsole("🔗 URL da Planilha Google configurada com sucesso!", "success");
+                CloudSyncManager.fetchRanking();
+                if (currentUser) CloudSyncManager.syncStudent(currentUser);
+            } else {
+                logConsole("⚪ Desconectado da Planilha Google. Operando no modo local.", "normal");
+            }
+        }
+    });
+}
+
 // ========================================================
 // TERMINAL HUNTER & EXECUÇÃO DO NEN
 // ========================================================
@@ -1024,6 +1209,9 @@ function applyNenDamage(amount, reason = "Violação das regras do Exame Hunter"
 
     // Atualização imediata do medidor de Aura
     updateUI();
+    if (typeof CloudSyncManager !== 'undefined') {
+        CloudSyncManager.syncStudent(u);
+    }
 }
 
 function restoreNen(amount = 20) {
@@ -1048,6 +1236,9 @@ function restoreNen(amount = 20) {
         showNenFloatBadge(`+${recovered}% NEN`, 'heal');
         logConsole(`✨ AURA RESTAURADA: +${recovered}% de Nen recuperado pela vitória! (Nen atual: ${u.nenEnergy}%)`, 'success');
         updateUI();
+        if (typeof CloudSyncManager !== 'undefined') {
+            CloudSyncManager.syncStudent(u);
+        }
     }
 }
 
@@ -1162,6 +1353,7 @@ function completeCurrentMission() {
 // INICIALIZAÇÃO
 // ========================================================
 function init() {
+    CloudSyncManager.updateStatusUI();
     const savedUser = StorageManager.getCurrentUser();
     if (savedUser) {
         currentUser = savedUser;
@@ -1170,6 +1362,9 @@ function init() {
         if (selectedMissionIndex >= 40) activeTab = 'mod3';
         else if (selectedMissionIndex >= 20) activeTab = 'mod2';
         updateUI();
+        if (CloudSyncManager.isConnected()) {
+            CloudSyncManager.syncStudent(currentUser);
+        }
     } else {
         renderSavedProfileChips();
         authModal.classList.remove('hidden');

@@ -189,6 +189,12 @@
                         <h3>TORRE CELESTIAL // PLACAR</h3>
                         <p>Classificação dos Hunters por Andar e Domínio de Nen</p>
                     </div>
+
+                    <!-- STATUS DE SINCRONIZAÇÃO EM NUVEM (GOOGLE SHEETS) -->
+                    <div id="cloud-sync-status" class="cloud-sync-status offline" title="Status da conexão com a Planilha da Turma">
+                        ⚪ Modo Local (Conecte à Planilha da Turma)
+                    </div>
+
                     <div class="ranking-table-container">
                         <table class="ranking-table">
                             <thead>
@@ -204,7 +210,12 @@
                             </tbody>
                         </table>
                     </div>
-                    <button id="btn-export-json" class="cyber-sub-btn">📥 EXPORTAR DADOS DA TORRE (.JSON)</button>
+
+                    <div class="ranking-actions-grid">
+                        <button id="btn-sync-sheets" class="cyber-sub-btn gold-border" title="Recarregar dados mais recentes da Planilha da Turma">🔄 ATUALIZAR PLACAR DA PLANILHA</button>
+                        <button id="btn-config-sheets" class="cyber-sub-btn" title="Configurar URL da Planilha Google (Apps Script)">⚙️ CONECTAR PLANILHA GOOGLE</button>
+                        <button id="btn-export-json" class="cyber-sub-btn">📥 EXPORTAR DADOS DA TORRE (.JSON)</button>
+                    </div>
                 </section>
             </div>
         </aside>
