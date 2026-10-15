@@ -1012,6 +1012,17 @@ body {
     box-shadow: 0 0 10px rgba(245, 158, 11, 0.25);
 }
 
+.cyber-sub-btn.danger-border {
+    border-color: rgba(239, 68, 68, 0.4);
+    color: var(--bug-red);
+}
+
+.cyber-sub-btn.danger-border:hover {
+    border-color: var(--bug-red);
+    background: rgba(239, 68, 68, 0.12);
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.25);
+}
+
 /* ========================================================
    PAINEL CENTRAL: TERMINAL DE NEN (EDITOR PYTHON)
 ======================================================== */

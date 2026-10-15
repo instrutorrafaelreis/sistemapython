@@ -407,7 +407,12 @@ const missions = [
 // ========================================================
 // GERENCIADOR DE DADOS EM JSON (LOCALSTORAGE)
 // ========================================================
-const STORAGE_KEY = 'hunter_x_bug_storage_v4';
+const STORAGE_KEY = 'hunter_x_bug_storage_v5';
+
+// Limpeza preventiva de versões legadas com dados de teste
+['hunter_x_bug_storage_v4', 'hunter_x_bug_storage_v3', 'hunter_x_bug_storage_v2', 'hunter_x_bug_storage_v1', 'python_quest_gamification_v2'].forEach(k => {
+    try { localStorage.removeItem(k); } catch(e) {}
+});
 
 function generateHunterSerial(name) {
     let hash = 0;
@@ -422,58 +427,9 @@ const StorageManager = {
         if (raw) {
             try { return JSON.parse(raw); } catch(e) { /* fallback */ }
         }
-        // Estado inicial com rivais clássicos do universo Hunter x Hunter
+        // Estado inicial 100% zerado: sem usuários fictícios ou progresso
         const initial = {
-            users: {
-                "GingFreecss": {
-                    name: "GingFreecss",
-                    avatar: "👑",
-                    nen: "Especialização (IA & Sec)",
-                    serial: "#HB-0000-PY",
-                    currentMissionIndex: 43,
-                    completedMissions: 43,
-                    floor: 200,
-                    jenys: 150000,
-                    score: 4300,
-                    lastActive: Date.now() - 600000
-                },
-                "KilluaZoldyck": { 
-                    name: "KilluaZoldyck", 
-                    avatar: "⚡", 
-                    nen: "Transformação (Algoritmos)",
-                    serial: "#HB-9999-PY",
-                    currentMissionIndex: 40, 
-                    completedMissions: 40, 
-                    floor: 180,
-                    jenys: 45000,
-                    score: 4000, 
-                    lastActive: Date.now() - 1800000 
-                },
-                "Kurapika": { 
-                    name: "Kurapika", 
-                    avatar: "🧠", 
-                    nen: "Materialização (Arquitetura)",
-                    serial: "#HB-4040-PY",
-                    currentMissionIndex: 32, 
-                    completedMissions: 32, 
-                    floor: 120,
-                    jenys: 28000,
-                    score: 3200, 
-                    lastActive: Date.now() - 3600000 
-                },
-                "Leorio": { 
-                    name: "Leorio", 
-                    avatar: "🛡️", 
-                    nen: "Emissão (DevOps / APIs)",
-                    serial: "#HB-1234-PY",
-                    currentMissionIndex: 18, 
-                    completedMissions: 18, 
-                    floor: 60,
-                    jenys: 12000,
-                    score: 1800, 
-                    lastActive: Date.now() - 7200000 
-                }
-            },
+            users: {},
             currentUser: null
         };
         this.saveData(initial);
@@ -482,6 +438,15 @@ const StorageManager = {
 
     saveData(data) {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    },
+
+    clearAllData() {
+        const fresh = {
+            users: {},
+            currentUser: null
+        };
+        this.saveData(fresh);
+        return fresh;
     },
 
     getCurrentUser() {
@@ -1047,6 +1012,18 @@ function renderRankingTable() {
         return (b.jenys || 0) - (a.jenys || 0);
     });
 
+    if (sortedUsers.length === 0) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 32px 15px; font-family: var(--font-heading); letter-spacing: 1px;">
+                    ⚔️ NENHUM HUNTER REGISTRADO AINDA.<br>
+                    <small style="color: var(--nen-green); font-size: 0.8rem;">Conclua uma caçada para inaugurar o placar da Torre Celestial!</small>
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
     sortedUsers.forEach((u, index) => {
         const tr = document.createElement('tr');
         if (currentUser && u.name === currentUser.name) {
@@ -1111,6 +1088,19 @@ if (btnConfigSheets) {
             } else {
                 logConsole("⚪ Desconectado da Planilha Google. Operando no modo local.", "normal");
             }
+        }
+    });
+}
+
+// Zerar todos os dados do sistema
+const btnClearAllData = document.getElementById('btn-clear-all-data');
+if (btnClearAllData) {
+    btnClearAllData.addEventListener('click', () => {
+        const confirmed = confirm("⚠️ ATENÇÃO, HUNTER!\n\nTem certeza de que deseja ZERAR TODOS OS DADOS do sistema?\n\nTodos os perfis, progresso de caçadas, aura de Nen e registros serão apagados permanentemente deste navegador.");
+        if (confirmed) {
+            StorageManager.clearAllData();
+            logConsole("🧹 Todos os dados do sistema foram zerados!", "error");
+            location.reload();
         }
     });
 }
